@@ -124,11 +124,6 @@ JANSSON_LIBS ?= $(shell pkg-config jansson --libs)
 CFLAGS += $(JANSSON_CFLAGS)
 LIBS_c += $(JANSSON_LIBS)
 
-FREETYPE_CFLAGS ?= $(shell pkg-config freetype2 --cflags)
-FREETYPE_LIBS ?= $(shell pkg-config freetype2 --libs)
-CFLAGS += $(FREETYPE_CFLAGS)
-LIBS_c += $(FREETYPE_LIBS)
-
 SPEEX_LIBS ?= $(shell pkg-config speex --libs) $(shell pkg-config speexdsp --libs)
 ifdef SPEEX_LIBS
     CFLAGS_c += -DWITH_SPEEX
