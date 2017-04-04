@@ -58,7 +58,6 @@ typedef enum {
 	OPTPG_FPS,
 	OPTPG_HUD,
 	OPTPG_DEMO_SPEC,
-	OPTPG_BINDS,
 	OPTPG_SYSTEM,
 	OPTPG_CONFIG,
 }	options_tab_t;
@@ -98,10 +97,6 @@ void AlwaysRunToggle(qbool back) {
 		Cvar_SetValue (&cl_sidespeed, 400);
 	}
 }
-
-static qbool InvertMouse(void) { return m_pitch.value < 0; }
-const char* InvertMouseRead(void) { return InvertMouse() ? "on" : "off"; }
-void InvertMouseToggle(qbool back) { Cvar_SetValue(&m_pitch, -m_pitch.value); }
 
 static qbool AutoSW(void) { return (w_switch.value > 2) || (!w_switch.value) || (b_switch.value > 2) || (!b_switch.value); }
 const char* AutoSWRead(void) { return AutoSW() ? "on" : "off"; }
@@ -295,37 +290,6 @@ qbool CT_Opt_Player_Mouse_Event(const mouse_state_t *ms)
 {
 	return Settings_Mouse_Event(&settplayer, ms);
 }
-
-
-//=============================================================================
-// <BINDS>
-
-extern cvar_t in_raw, in_m_smooth, m_rate, in_m_os_parameters;
-const char* in_raw_enum[] = { "off", "on" };
-const char* in_m_os_parameters_enum[] = { "off", "Keep accel settings", "Keep speed settings", "Keep all settings" };
-
-void Menu_Input_Restart(void) { Cbuf_AddText("in_restart\n"); }
-
-settings_page settbinds;
-
-void CT_Opt_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPage_t *page) {
-	Settings_Draw(x2, y2, w, h, &settbinds);
-}
-
-int CT_Opt_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key(&settbinds, k, unichar);
-}
-
-void OnShow_SettBinds(void) { Settings_OnShow(&settbinds); }
-
-qbool CT_Opt_Binds_Mouse_Event(const mouse_state_t *ms)
-{
-	return Settings_Mouse_Event(&settbinds, ms);
-}
-
-// </BINDS>
-//=============================================================================
-
 
 
 //=============================================================================
@@ -786,13 +750,6 @@ CTabPage_Handlers_t options_view_handlers = {
 	CT_Opt_View_Mouse_Event
 };
 
-CTabPage_Handlers_t options_controls_handlers = {
-	CT_Opt_Binds_Draw,
-	CT_Opt_Binds_Key,
-	OnShow_SettBinds,
-	CT_Opt_Binds_Mouse_Event
-};
-
 CTabPage_Handlers_t options_system_handlers = {
 	CT_Opt_System_Draw,
 	CT_Opt_System_Key,
@@ -1084,100 +1041,6 @@ setting settview_arr[] = {
 	ADDSET_BASIC_SECTION(),
 };
 
-// CONTROLS TAB
-// please try to put mostly binds in here
-setting settbinds_arr[] = {
-	ADDSET_BOOL		("Advanced Options", menu_advanced),
-	
-	ADDSET_SEPARATOR("Mouse Settings"),
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_BOOL		("Freelook", freelook),
-	ADDSET_BASIC_SECTION(),
-	ADDSET_NUMBER	("Sensitivity", sensitivity, 1, 20, 0.25), // My sens is 16, so maybe some people have it up to 20?
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_NUMBER	("Menu Mouse Sensitivity", cursor_sensitivity, 0.10 , 3, 0.10),
-	ADDSET_NUMBER	("Acceleration", m_accel, 0, 1, 0.1),
-	ADDSET_BASIC_SECTION(),
-	ADDSET_CUSTOM	("Invert Mouse", InvertMouseRead, InvertMouseToggle, "Inverts the Y axis."),
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_STRING   ("X-axis Sensitivity", m_yaw),
-	ADDSET_STRING   ("Y-axis Sensitivity", m_pitch),
-	ADDSET_NAMED    ("Raw Mouse Input", in_raw, in_raw_enum),
-	ADDSET_BASIC_SECTION(),
-
-	ADDSET_SEPARATOR("Movement"),
-	ADDSET_BIND("Attack", "+attack"),
-	ADDSET_BIND("Jump/Swim up", "+jump"),
-	ADDSET_BIND("Move Forward", "+forward"),
-	ADDSET_BIND("Move Backward", "+back"),
-	ADDSET_BIND("Strafe Left", "+moveleft"),
-	ADDSET_BIND("Strafe Right", "+moveright"),
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_BIND("Swim Up", "+moveup"),
-	ADDSET_BIND("Swim Down", "+movedown"),
-	ADDSET_BIND("Zoom In/Out", "+zoom"),
-	ADDSET_BASIC_SECTION(),
-
-	ADDSET_SEPARATOR("Weapons"),
-	ADDSET_BIND("Previous Weapon", "weapon 12"),
-	ADDSET_BIND("Next Weapon", "weapon 10"),
-	ADDSET_BIND("Axe", "weapon 1"),
-	ADDSET_BIND("Shotgun", "weapon 2"),
-	ADDSET_BIND("Super Shotgun", "weapon 3"),
-	ADDSET_BIND("Nailgun", "weapon 4"),
-	ADDSET_BIND("Super Nailgun", "weapon 5"),
-	ADDSET_BIND("Grenade Launcher", "weapon 6"),
-	ADDSET_BIND("Rocket Launcher", "weapon 7"),
-	ADDSET_BIND("Thunderbolt", "weapon 8"),
-
-	ADDSET_SEPARATOR("Chat settings"),
-	ADDSET_BIND	("Chat", "messagemode"),
-	ADDSET_BIND	("Teamchat", "messagemode2"),
-
-	ADDSET_SEPARATOR("Miscellaneous"),
-	ADDSET_BIND("Show Scores", "+showscores"),
-	ADDSET_BIND("Screenshot", "screenshot"),
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_BIND("Pause", "pause"),
-	ADDSET_BIND("Quit", "quit"),
-	ADDSET_BIND("Proxy Menu", "toggleproxymenu"),
-	ADDSET_BASIC_SECTION(),
-
-	ADDSET_SEPARATOR("Demo & Spec"),
-	ADDSET_BIND("Demo Controls", "demo_controls"),
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_BIND("Autotrack", "autotrack"),
-	ADDSET_BIND("Play", "cl_demospeed 1;echo Playing demo."),
-	ADDSET_BIND("Stop", "disconnect"),
-	ADDSET_BIND("Pause", "cl_demospeed 0;echo Demo paused."),
-	ADDSET_BIND("Fast Forward", "cl_demospeed 5;echo Demo paused."),
-	ADDSET_BASIC_SECTION(),
-
-	ADDSET_SEPARATOR("Teamplay"),
-	ADDSET_BIND("Report Status", "tp_msgreport"),
-	ADDSET_BIND("Lost Location", "tp_msglost"),
-	ADDSET_BIND("Location Safe", "tp_msgsafe"),
-	ADDSET_BIND("Point At Item", "tp_msgpoint"),
-	ADDSET_BIND("Took Item", "tp_msgtook"),
-	ADDSET_BIND("Need Items", "tp_msgneed"),
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_BIND("Yes/Ok", "tp_msgyesok"),
-	ADDSET_BIND("Coming From Location", "tp_msgcoming"),
-	ADDSET_BASIC_SECTION(),
-	ADDSET_BIND("Help Location", "tp_msghelp"),
-	ADDSET_ADVANCED_SECTION(),
-	ADDSET_BIND("Get Quad", "tp_msggetquad"),
-	ADDSET_BIND("Get Pent", "tp_msggetpent"),
-	ADDSET_BIND("Enemy Quad Dead", "tp_msgquaddead"),
-	ADDSET_BIND("Enemy Has Powerup", "tp_msgenemypwr"),
-	ADDSET_BIND("Trick At Location", "tp_msgtrick"),
-	ADDSET_BIND("Replace At Location", "tp_msgreplace"),
-	ADDSET_BIND("You Take Item", "tp_msgutake"),
-	ADDSET_BIND("Waiting", "tp_msgwaiting"),
-	ADDSET_BIND("Enemy Slipped", "tp_msgslipped"),
-	ADDSET_BASIC_SECTION(),
-};
-
 // MISC TAB
 setting settmisc_arr[] = {
 	ADDSET_BOOL		("Advanced Options", menu_advanced),
@@ -1343,7 +1206,6 @@ void Menu_Options_Init(void) {
 	Settings_Page_Init(settfps, settfps_arr);
 	Settings_Page_Init(settview, settview_arr);
 	Settings_Page_Init(settplayer, settplayer_arr);
-	Settings_Page_Init(settbinds, settbinds_arr);
 	Settings_Page_Init(settsystem, settsystem_arr);
 	Settings_Page_Init(settconfig, settconfig_arr);
 
@@ -1363,7 +1225,6 @@ void Menu_Options_Init(void) {
 	CTab_AddPage(&options_tab, "Player", OPTPG_PLAYER, &options_player_handlers);
 	CTab_AddPage(&options_tab, "Graphics", OPTPG_FPS, &options_graphics_handlers);
 	CTab_AddPage(&options_tab, "View", OPTPG_HUD, &options_view_handlers);
-	CTab_AddPage(&options_tab, "Controls", OPTPG_BINDS, &options_controls_handlers);
 	CTab_AddPage(&options_tab, "Misc", OPTPG_MISC, &options_misc_handlers);
 	CTab_AddPage(&options_tab, "System", OPTPG_SYSTEM, &options_system_handlers);
 	CTab_AddPage(&options_tab, "Config", OPTPG_CONFIG, &options_config_handlers);
@@ -1374,7 +1235,6 @@ qbool Menu_Options_IsBindingKey (void)
 {
 	// Options/Binds, and waiting for a keypress
 	return m_state == m_options && (
-		(CTab_GetCurrentId (&options_tab) == OPTPG_BINDS && settbinds.mode == SPM_BINDING) ||
 		(CTab_GetCurrentId (&options_tab) == OPTPG_SYSTEM && settsystem.mode == SPM_BINDING)
 	);
 }

@@ -218,7 +218,7 @@ static void Setting_DrawSkin(int x, int y, int w, setting* set, qbool active)
 	UI_Print(x, y, set->cvar->string, active);
 }
 
-static void Setting_DrawBind(int x, int y, int w, setting* set, qbool active, qbool bindmode)
+static void Setting_DrawBind_2(int x, int y, int w, setting* set, qbool active, qbool bindmode, int tfClassNum)
 {
 	int keys[2];
 	char *name;
@@ -234,8 +234,10 @@ static void Setting_DrawBind(int x, int y, int w, setting* set, qbool active, qb
 	}
 
 	//x += LETW*2;
-
-	M_FindKeysForCommand (set->varname, keys);
+	if (tfClassNum >= 0)
+		M_FindKeysForCommand_2 (set->varname, keys, tfClassNum);
+	else
+		M_FindKeysForCommand (set->varname, keys);
 
 	if (keys[0] == -1) {
 		UI_Print (x, y, "???", active);
@@ -248,7 +250,12 @@ static void Setting_DrawBind(int x, int y, int w, setting* set, qbool active, qb
 			UI_Print (x + 4*8, y, Key_KeynumToString (keys[1]), active);
 		}
 	}
+}
 
+static void Setting_DrawBind(int x, int y, int w, setting* set, qbool active, qbool bindmode)
+{
+	int tfClassNum = -1;
+	Setting_DrawBind_2(x, y, w, set, active, bindmode, tfClassNum);
 }
 
 static void Setting_IncreaseEnum(setting* set, int step)
@@ -360,29 +367,66 @@ static void Setting_Reset(setting* set)
 	}
 }
 
-static void Setting_BindKey(setting* set, int key)
+static void Setting_BindKey_2(setting* set, int key, int tfClassNum)
 {
-	Key_SetBinding(key, set->varname);
+	if (tfClassNum >= 0)
+		Key_SetBinding_2(key, set->varname, tfClassNum);
+	else
+		Key_SetBinding(key, set->varname);
 }
 
-static void M_UnbindCommand (const char *command) {
-	int j, l;
+static void Setting_BindKey(setting* set, int key)
+{
+	int tfClassNum = -1;
+	Setting_BindKey_2(set, key, tfClassNum);
+}
+
+static void M_UnbindCommand_2 (const char *command, int tfClassNum) {
+	int j, l, sizeofArray;
 	char *b;
+	char **bindlist;
+	if (tfClassNum >= 0) {
+		bindlist = classbindings[tfClassNum];
+		sizeofArray = sizeof(classbindings[tfClassNum]);
+	} else {
+		bindlist = keybindings;
+		sizeofArray = sizeof(keybindings);
+	}
 
 	l = strlen(command) + 1;
 
-	for (j = 0; j < (sizeof(keybindings) / sizeof(*keybindings)); j++) {
-		b = keybindings[j];
+	for (j = 0; j < (sizeofArray / sizeof(*bindlist)); j++) {
+		b = bindlist[j];
 		if (!b)
 			continue;
-		if (!strncmp (b, command, l) )
-			Key_Unbind (j);
+		if (!strncmp (b, command, l) ) {
+			if (tfClassNum >= 0)
+				Key_Unbind_2 (j, tfClassNum);
+			else
+				Key_Unbind (j);
+		}
 	}
+}
+
+
+
+static void M_UnbindCommand (const char *command) {
+	int tfClassNum = -1;
+	M_UnbindCommand_2 (command, tfClassNum);
+}
+
+static void Setting_UnbindKey_2(setting* set, int tfClassNum)
+{
+	if (tfClassNum >= 0)
+		M_UnbindCommand_2(set->varname, tfClassNum);
+	else
+		M_UnbindCommand(set->varname);
 }
 
 static void Setting_UnbindKey(setting* set)
 {
-	M_UnbindCommand(set->varname);
+	int tfClassNum = -1;
+	Setting_UnbindKey_2(set, tfClassNum);
 }
 
 static int Settings_PageHeight(const settings_page *page)
@@ -629,7 +673,7 @@ static void Setting_Slider_Click(const settings_page *page, const mouse_state_t 
 	}
 }
 
-qbool Settings_Key(settings_page* tab, int key, wchar unichar)
+qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum)
 {
 	qbool up = false;
 	setting_type type;
@@ -640,8 +684,14 @@ qbool Settings_Key(settings_page* tab, int key, wchar unichar)
 	type = tab->settings[tab->marked].type;
 
 	if (tab->mode == SPM_BINDING) {
-		if (key != K_ESCAPE)
-			Setting_BindKey(tab->settings + tab->marked, key);
+		if (key != K_ESCAPE) {
+			if (tfClassNum >= 0) {
+				Setting_BindKey_2(tab->settings + tab->marked, key, tfClassNum);
+			}
+			else {
+				Setting_BindKey(tab->settings + tab->marked, key);
+			}
+		}
 
 		tab->mode = SPM_NORMAL;
 		return true;
@@ -736,7 +786,7 @@ qbool Settings_Key(settings_page* tab, int key, wchar unichar)
 		case K_DEL:
 			     switch (type) {
 				     case stt_string: CEditBox_Key(&editbox, key, unichar); return true;
-				     case stt_bind: Setting_UnbindKey(tab->settings + tab->marked); return true;
+				     case stt_bind: ((tfClassNum >= 0) ? Setting_UnbindKey_2(tab->settings + tab->marked, tfClassNum) : Setting_UnbindKey(tab->settings + tab->marked)); return true;
 				     default: Setting_Reset(tab->settings + tab->marked); return true;
 			     }
 
@@ -785,6 +835,12 @@ qbool Settings_Key(settings_page* tab, int key, wchar unichar)
 	return true;
 }
 
+qbool Settings_Key(settings_page* tab, int key, wchar unichar)
+{
+	int tfClassNum = -1;
+	return Settings_Key_2(tab, key, unichar, tfClassNum);
+}
+
 static void Setting_Click(settings_page* page, const mouse_state_t *ms)
 {
 	// don't accept clicks on the label
@@ -806,7 +862,7 @@ static void Settings_AdjustScrollBar(settings_page *page)
 	page->scrollbar->curpos = bound(0, percentage, 1);
 }
 
-void Settings_Draw(int x, int y, int w, int h, settings_page* tab)
+void Settings_Draw_2(int x, int y, int w, int h, settings_page* tab, int tfClassNum)
 {
 	int i;
 	int ch;
@@ -873,7 +929,7 @@ void Settings_Draw(int x, int y, int w, int h, settings_page* tab)
 			case stt_string: Setting_DrawString(x, y, w, set, active); break;
 			case stt_playercolor: Setting_DrawColor(x, y, w, set, active); break;
 			case stt_skin: Setting_DrawSkin(x, y, w, set, active); break;
-			case stt_bind: Setting_DrawBind(x, y, w, set, active, tab->mode == SPM_BINDING); break;
+			case stt_bind: (tfClassNum >= 0 ? Setting_DrawBind_2(x, y, w, set, active, tab->mode == SPM_BINDING,tfClassNum) : Setting_DrawBind(x, y, w, set, active, tab->mode == SPM_BINDING)); break;
 				       // unhandled
 			case stt_advmark:
 			case stt_basemark:
@@ -884,6 +940,12 @@ void Settings_Draw(int x, int y, int w, int h, settings_page* tab)
 		//if (i < tab->count)
 		//	nexttop = tab->settings[i+1].top;
 	}
+}
+
+void Settings_Draw(int x, int y, int w, int h, settings_page* tab)
+{
+	int tfClassNum  = -1;
+	Settings_Draw_2(x,y,w,h,tab,tfClassNum);
 }
 
 void Settings_OnShow(settings_page *page)

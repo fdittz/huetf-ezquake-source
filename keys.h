@@ -168,6 +168,8 @@ typedef enum { key_game, key_console, key_message, key_menu, key_hudeditor, key_
 
 extern keydest_t	key_dest, key_dest_beforemm, key_dest_beforecon;
 extern char 	*keybindings[UNKNOWN + 256];
+extern char     *classbindings[9][UNKNOWN + 256];
+extern char     *classconfigfiles[9];
 extern int		key_repeats[UNKNOWN + 256];
 extern qbool	keydown[UNKNOWN + 256];
 extern int		key_lastpress;
@@ -211,7 +213,9 @@ void Key_Event (int key, qbool down);
 void Key_EventEx (int key, wchar unichar, qbool down);
 void Key_Init (void);
 void Key_SetBinding (int keynum, const char *binding);
+void Key_SetBinding_2 (int keynum, const char *binding, int tfClassNum);
 void Key_Unbind (int keynum);
+void Key_Unbind_2 (int keynum, int tfClassNum);
 void Key_ClearStates (void);
 int	 Key_StringToKeynum (const char *str);
 char *Key_KeynumToString (int keynum);
@@ -230,6 +234,17 @@ extern qbool	con_redchars;
 extern cvar_t	con_bindphysical;
 
 #define CONSOLE_LINE_EMPTY() (!key_lines[edit_line][1])
+#define SCOUT_NUM    0
+#define SNIPER_NUM   1
+#define SOLDIER_NUM  2
+#define DEMOMAN_NUM  3
+#define MEDIC_NUM    4
+#define HWGUY_NUM    5
+#define PYRO_NUM     6
+#define SPY_NUM      7
+#define ENGINEER_NUM 8
+
+
 
 // }
 

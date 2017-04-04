@@ -56,6 +56,7 @@ extern qbool		sb_showscores, sb_showteamscores;
 
 extern cvar_t		cl_teamtopcolor, cl_teambottomcolor, cl_enemytopcolor, cl_enemybottomcolor;
 extern char		allskins[128];
+char     *classextras[9][4096];
 
 cvar_t	cfg_save_unchanged	=	{"cfg_save_unchanged", "0"};
 cvar_t	cfg_save_userinfo	=	{"cfg_save_userinfo", "2"};
@@ -99,6 +100,53 @@ void DumpBindings (FILE *f)
 	}
 	if (!printed)
 		fprintf(f, "//no bindings\n");
+}
+
+void DumpBindings_TF (FILE *f, int tfClassNum)
+{
+	int i, leftright, sizeofArray;
+	char *spaces, *string;
+	qbool printed = false;
+	char **bindlist;
+	if (tfClassNum >= 0) {
+		bindlist = classbindings[tfClassNum];
+		sizeofArray = sizeof(classbindings[tfClassNum]);
+	} else {
+		bindlist = keybindings;
+		sizeofArray = sizeof(keybindings);
+	}
+
+	for (i = 0; i < (sizeofArray / sizeof(*bindlist)); i++) {
+
+		leftright = Key_IsLeftRightSameBind(i) ? 1 : 0;
+		if (bindlist[i] || leftright) {
+			printed = true;
+			string = Key_KeynumToString(i);
+			spaces = CreateSpaces(BIND_ALIGN_COL - strlen(string) - 6);
+			if (i == ';')
+				fprintf (f, "bind  \";\"%s\"%s\"\n", spaces, bindlist[i]);
+			else
+				fprintf (f, "bind  %s%s\"%s\"\n", string, spaces, bindlist[leftright ? i + 1 : i]);
+
+			if (leftright)
+				i += 2;
+		}
+	}
+	if (!printed)
+		fprintf(f, "//no bindings\n");
+}
+
+void DumpExtras_TF (FILE *f, int tfClassNum)
+{
+	int i, sizeofArray;
+	sizeofArray = sizeof(classextras[tfClassNum]);
+
+	for (i = 0; i < (sizeofArray / sizeof(*classextras[tfClassNum])); i++) {
+		if (classextras[tfClassNum][i]) {
+			fprintf (f, "%s\n",classextras[tfClassNum][i]);
+		}
+	}
+
 }
 
 static qbool Config_Unsaved_Cvar(const char *name)
@@ -728,8 +776,9 @@ static void Config_PrintPreamble(FILE *f)
 	Config_PrintBorder(f);
 	Config_PrintLine(f, "", 3);
 	Config_PrintLine(f, "", 3);
-	Config_PrintLine(f, "E Z Q U A K E   C O N F I G U R A T I O N", 3);
+	Config_PrintLine(f, "E Z Q U A K E  H U E T F  C L A S S  C O N F I G U R A T I O N", 3);
 	Config_PrintLine(f, "", 3);
+	Config_PrintLine(f, "WARNING: This file will be overwritten by ingame configurations, editing not recommended", 3);
 	Config_PrintLine(f, "", 3);
 	Config_PrintBorder(f);
 	Config_PrintBorder(f);
@@ -833,6 +882,56 @@ void DumpConfig(char *name)
 	fclose(f);
 }
 
+void DumpConfig_TF(char *name, int tfClassNum)
+{
+	FILE	*f;
+	char	*outfile;
+
+	outfile = va("%s/fortress/%s", com_basedir, name);
+
+
+	if (!(f	= fopen	(outfile, "w"))) {
+		FS_CreatePath(outfile);
+		if (!(f	= fopen	(outfile, "w"))) {
+			Com_Printf ("Couldn't write	%s.\n",	name);
+			return;
+		}
+	}
+
+	Com_Printf("Saving configuration to %s\n", outfile);
+
+	Config_PrintPreamble(f);
+
+	Config_PrintHeading(f, "A L I A S E S,  C O N F I G S ");
+	DumpExtras_TF(f,tfClassNum);
+
+	Config_PrintHeading(f, "K E Y   B I N D I N G S");
+	DumpBindings_TF(f, tfClassNum);
+
+	fclose(f);
+}
+
+/*void DumpTFConfig(char *name) {
+	FILE	*f;
+	char	*outfile, *newlines = "\n";
+
+	if (cfg_use_home.integer) // homedir
+		outfile = va("%s/%s/%s", com_homedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "" : com_gamedirfile, name);
+	else // basedir
+		outfile = va("%s/%s/configs/%s", com_basedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "ezquake" : com_gamedirfile, name);
+
+	if (!(f	= fopen	(outfile, "w"))) {
+		FS_CreatePath(outfile);
+		if (!(f	= fopen	(outfile, "w"))) {
+			Com_Printf ("Couldn't write	%s.\n",	name);
+			return;
+		}
+	}
+	Config_PrintHeading(f, "K E Y   B I N D I N G S");
+	DumpBindings(f);
+	fclose(f);
+}
+*/
 void DumpHUD(const char *name)
 {
 	// Dumps all variables from CFG_GROUP_HUD into a file
@@ -882,7 +981,7 @@ void DumpHUD(const char *name)
 
 extern qbool filesystemchanged; // fix bug 2359900
 
-void SaveConfig(const char *cfgname)
+void SaveConfig_2(const char *cfgname, int tfClassNum)
 {
 	char filename[MAX_PATH] = {0}, *filename_ext, *backupname_ext;
 	size_t len;
@@ -892,7 +991,7 @@ void SaveConfig(const char *cfgname)
 
 	COM_ForceExtensionEx (filename, ".cfg", sizeof (filename));
 
-	if (cfg_backup.integer) {
+	if (cfg_backup.integer && tfClassNum < 0) {
 		if (cfg_use_home.integer)	// homedir
 			filename_ext = va("%s/%s/%s", com_homedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "" : com_gamedirfile, filename);
 		else	// basedir
@@ -913,9 +1012,17 @@ void SaveConfig(const char *cfgname)
 			Q_free(backupname_ext);
 		}
 	}
-
-	DumpConfig(filename);
+	if (tfClassNum >= 0)
+		DumpConfig_TF(filename,tfClassNum);
+	else
+		DumpConfig(filename);
 	filesystemchanged = true; // fix bug 2359900
+}
+
+void SaveConfig(const char *cfgname)
+{
+	int tfClassNum = -1;
+	SaveConfig_2(cfgname,tfClassNum);
 }
 
 void SaveConfig_f(void)
@@ -973,6 +1080,92 @@ qbool LoadCfg(FILE *f)
 	return true;
 }
 
+qbool LoadClassCfg(FILE *f, int tfClassNum)
+{
+	char *fileBuffer;
+    int size;
+    int extraPos = 0;
+    char *checker = NULL;
+
+	if (!f) {
+		return false;
+	}
+
+	size = FS_FileLength(f);
+	fileBuffer = Q_malloc(size + 1); // +1 for null terminator
+	if (fread(fileBuffer, 1, size, f) != size) {
+		Com_Printf("Error reading config file\n");
+		Q_free(fileBuffer);
+		return false;
+	}
+	fileBuffer[size] = 0;
+	char * line = strtok(strdup(fileBuffer), "\n");
+	while(line != NULL) {
+		checker = strstr(line,"bind");
+		if (checker == line) {	
+		    static char buffer[4096];
+		    char *p;		
+	    	char *orig = "bind";
+		    char *rep = "bindcfgclass";
+		    p = strstr(line, orig);  // Is 'orig' even in 'line'?
+    
+
+			strncpy(buffer, line, p-line); // Copy characters from 'line' start to 'orig' st$
+			buffer[p-line] = '\0';
+
+			sprintf(buffer+(p-line), "%s %d %s", rep, tfClassNum, p+strlen(orig));
+
+			Cbuf_AddText(strcat(buffer,"\n"));		
+		} else if (!((strstr(line,"//") == line) && (extraPos < 4096))) {
+			classextras[tfClassNum][extraPos] = line;
+			extraPos++;
+		}
+	   	line = strtok(NULL, "\n");
+	}
+	Q_free(fileBuffer);
+	return true;
+}
+
+void LoadClassConfig(const char * cfgname, int tfClassNum)
+{
+	FILE	*f = NULL;
+	char	filename[MAX_PATH] = {0},
+			fullname[MAX_PATH] = {0};
+
+	snprintf(filename, sizeof(filename) - 4, "%s", cfgname); // use config.cfg if no params was specified
+
+	COM_ForceExtensionEx (filename, ".cfg", sizeof (filename));
+
+	// basedir
+	snprintf(fullname, sizeof(fullname), "%s/fortress/%s", com_basedir, filename);
+
+	if(!(f = fopen(fullname, "rb")))
+	{
+		Com_Printf("Couldn't load %s \n", filename);
+		return;
+	}
+
+	con_suppress = true;
+	ResetConfigs(false, true);
+	con_suppress = false;
+	
+	Cbuf_AddText ("cl_warncmd 0\n");
+
+	LoadClassCfg(f,tfClassNum);
+	fclose(f);
+
+	/* johnnycz:
+	  This should be called with TP_ExecTrigger("f_cfgload"); but definition
+	  of f_cfgload alias is stored in config which is waiting to be executed
+	  in command queue so nothing would happen. We have to add f_cfgload as
+	  a standard command to the queue. Since warnings are off this is OK but
+	  regarding to other f_triggers non-standard.
+	*/
+	Cbuf_AddText ("f_cfgload\n");
+
+	Cbuf_AddText ("cl_warncmd 1\n");
+}
+
 /*
 	example how it works
 	
@@ -983,6 +1176,8 @@ qbool LoadCfg(FILE *f)
 	quakedir/ezquake/configs/testcfg.cfg
 	built-in ezquake config
 */
+
+
 void LoadConfig_f(void)
 {
 	FILE	*f = NULL;

@@ -25,8 +25,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void ConfigManager_Init (void);
 void Config_QuitSave(void);
 void ResetBinds(void);
+void SaveConfig(const char *cfgname);
+void SaveConfig_2(const char *cfgname, int tfClassNum);
+void LoadClassConfig(const char *cfgname, int tfClassNum);
 
 extern cvar_t	cfg_save_unchanged, cfg_legacy_exec;
+extern char     *classextras[9][4096];
 
 #define MAIN_GL_CONFIG_FILENAME "config.cfg"
 #define MAIN_SW_CONFIG_FILENAME "configsw.cfg"

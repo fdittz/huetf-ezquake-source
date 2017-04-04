@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "menu_demo.h"
 #include "menu_proxy.h"
 #include "menu_options.h"
+#include "menu_controls.h"
 #include "menu_ingame.h"
 #include "menu_multiplayer.h"
 #include "EX_FileList.h"
@@ -60,6 +61,7 @@ void M_Menu_Main_f (void);
 		void M_Menu_Demos_f (void);
 		void M_Menu_GameOptions_f (void);
 	void M_Menu_Options_f (void);
+	void M_Menu_Controls_f (void);
 #ifdef WITH_MP3_PLAYER
 	void M_Menu_MP3_Control_f (void);
 #endif // WITH_MP3_PLAYER
@@ -76,6 +78,7 @@ void M_Main_Draw (void);
 		void M_GameOptions_Draw (void);
 		void M_Proxy_Draw (void);
 	void M_Options_Draw (void);
+	void M_Controls_Draw (void);
 	void M_Help_Draw (void);
 	void M_Quit_Draw (void);
 
@@ -90,6 +93,7 @@ void M_Main_Key (int key);
 		qbool M_GameOptions_Key (int key);
 		void M_Proxy_Key (int key);
 	void M_Options_Key (int key, wchar unichar);
+	void M_Controls_Key (int key, wchar unichar);
 	void M_Help_Key (int key);
 	void M_Quit_Key (int key);
 
@@ -182,16 +186,23 @@ void M_DrawSlider (int x, int y, float range) {
 
 qbool Key_IsLeftRightSameBind(int b);
 
-void M_FindKeysForCommand (const char *command, int *twokeys) {
-	int count, j, l;
+void M_FindKeysForCommand_2 (const char *command, int *twokeys, int tfClassNum) {
+	int count, j, l, sizeofArray;
 	char *b;
-
+	char **bindlist;
+	if (tfClassNum >= 0) {
+		bindlist = classbindings[tfClassNum];
+		sizeofArray = sizeof(classbindings[tfClassNum]);
+	} else {
+		bindlist = keybindings;
+		sizeofArray = sizeof(keybindings);
+	}
 	twokeys[0] = twokeys[1] = -1;
 	l = strlen(command) + 1;
 	count = 0;
 
-	for (j = 0 ; j < (sizeof(keybindings) / sizeof(*keybindings)); j++) {
-		b = keybindings[j];
+	for (j = 0 ; j < (sizeofArray / sizeof(*bindlist)); j++) {
+		b = bindlist[j];
 		if (!b)
 			continue;
 		if (!strncmp (b, command, l)) {
@@ -213,6 +224,12 @@ void M_FindKeysForCommand (const char *command, int *twokeys) {
 		}
 	}
 }
+
+void M_FindKeysForCommand (const char *command, int *twokeys) {
+	int tfClassNum = -1;
+	M_FindKeysForCommand_2 (command, twokeys, tfClassNum); 
+}
+
 
 void M_Unscale_Menu(void)
 {
@@ -396,6 +413,7 @@ bigmenu_items_t mainmenu_items[] = {
 	{"Single Player", M_Menu_SinglePlayer_f},
 	{"Multiplayer", M_Menu_MultiPlayer_f},
 	{"Options", M_Menu_Options_f},
+	{"Controls", M_Menu_Controls_f},
 	{"Demos", M_Menu_Demos_f},
 #ifdef WITH_MP3_PLAYER
 	{"MP3 Player", M_Menu_MP3_Control_f},
@@ -557,6 +575,23 @@ void M_Options_Key (int key, wchar unichar) {
 
 void M_Options_Draw (void) {
 	Menu_Options_Draw();	// menu_options module
+}
+
+//=============================================================================
+
+//=============================================================================
+/* CONTROLS MENU */
+
+void M_Menu_Controls_f (void) {
+	M_EnterMenu (m_controls);
+}
+
+void M_Controls_Key (int key, wchar unichar) {
+	Menu_Controls_Key(key, unichar); // menu_options module
+}
+
+void M_Controls_Draw (void) {
+	Menu_Controls_Draw();	// menu_options module
 }
 
 //=============================================================================
@@ -1288,6 +1323,7 @@ void M_Init (void) {
 	Menu_Help_Init();	// help_files module
 	Menu_Demo_Init();	// menu_demo module
 	Menu_Options_Init(); // menu_options module
+	Menu_Controls_Init(); // menu_options module
 	Menu_Ingame_Init();
 	Menu_MultiPlayer_Init(); // menu_multiplayer.h
 
@@ -1308,6 +1344,7 @@ void M_Init (void) {
 #endif
 	Cmd_AddCommand ("menu_demos", M_Menu_Demos_f);
 	Cmd_AddCommand ("menu_options", M_Menu_Options_f);
+	Cmd_AddCommand ("menu_controls", M_Menu_Controls_f);
 	Cmd_AddCommand ("help", M_Menu_Help_f);
 	Cmd_AddCommand ("menu_help", M_Menu_Help_f);
 	Cmd_AddCommand ("menu_quit", M_Menu_Quit_f);
@@ -1360,6 +1397,7 @@ void M_Draw (void) {
 		case m_multiplayer:		Menu_MultiPlayer_Draw (); break;
 		case m_multiplayer_submenu: M_MultiPlayerSub_Draw(); break;
 		case m_options:			M_Options_Draw(); break;
+		case m_controls:		M_Controls_Draw(); break;
 		case m_proxy:			Menu_Proxy_Draw(); break;
 		case m_ingame:			M_Ingame_Draw(); break;
 		case m_help:			M_Help_Draw(); break;
@@ -1395,6 +1433,10 @@ qbool Menu_ExecuteKey (int key) {
 		return false;
 	}
 
+	if (Menu_Controls_IsBindingKey ()) {
+		return false;
+	}
+
 	// Capture F1 in menus that have help boxes
 	if (key == K_F1 && m_state != m_ingame) {
 		return false;
@@ -1420,6 +1462,7 @@ void M_Keydown (int key, wchar unichar) {
 		case m_multiplayer:		Menu_MultiPlayer_Key(key, unichar); return;
 		case m_multiplayer_submenu: M_MultiPlayerSub_Key(key); return;
 		case m_options: 		M_Options_Key(key, unichar); return;
+		case m_controls: 		M_Controls_Key(key, unichar); return;
 		case m_proxy:			M_Proxy_Key(key); return;
 		case m_ingame:			M_Ingame_Key(key); return;
 		case m_help:			Menu_Help_Key(key, unichar); return;

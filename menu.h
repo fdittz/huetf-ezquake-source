@@ -50,6 +50,7 @@ void M_Print (int cx, int cy, char *str);
 void M_DrawCharacter (int cx, int line, int num);
 void M_DrawSlider (int x, int y, float range);
 void M_FindKeysForCommand (const char *command, int *twokeys);
+void M_FindKeysForCommand_2 (const char *command, int *twokeys, int tfClassNum);
 void M_BuildTranslationTable(int top, int bottom);
 void M_Unscale_Menu(void);
 qbool Menu_Mouse_Event(const mouse_state_t* ms);
@@ -64,6 +65,7 @@ typedef enum {
     m_none, m_main, m_proxy, m_singleplayer, m_load, m_save,
 	m_multiplayer, m_demos, m_multiplayer_submenu,
     m_options,
+    m_controls,
 	m_help,
 	m_quit, m_ingame, 
 #ifdef WITH_MP3_PLAYER

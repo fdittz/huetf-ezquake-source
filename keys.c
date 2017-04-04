@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "irc.h"
 #include "qtv.h"
 #include "utils.h"
+#include "config_manager.h"
 
 extern cvar_t sys_disable_alt_enter;
 
@@ -95,6 +96,31 @@ int count_alias = 0;
 keydest_t	key_dest, key_dest_beforemm, key_dest_beforecon;
 
 char	*keybindings[UNKNOWN + 256];
+/* Team Fortress Class Bindings
+* 0 - scout
+* 1 - sniper
+* 2 - soldier
+* 3 - demoman
+* 4 - medic
+* 5 - hwguy
+* 6 - pyro
+* 7 - spy
+* 8 - engineer
+*/
+char    *classbindings[9][UNKNOWN + 256];
+char *classconfigfiles[9] = {
+"scout.cfg",
+"sniper.cfg",
+"soldier.cfg",
+"demoman.cfg",
+"medic.cfg",
+"hwguy.cfg",
+"pyro.cfg",
+"spy.cfg",
+"engineer.cfg"
+};
+
+// ---end----
 qbool	consolekeys[UNKNOWN + 256];	// if true, can't be rebound while in console
 qbool	hudeditorkeys[UNKNOWN + 256];	// if true, can't be rebound while in hud editor
 qbool	democontrolskey[UNKNOWN + 256];
@@ -1597,23 +1623,56 @@ char *Key_KeynumToString (int keynum) {
 }
 
 void Key_SetBinding (int keynum, const char *binding) {
+	int tfClassNum = -1;
+	Key_SetBinding_2 (keynum, binding, tfClassNum);
+}
+
+void Key_SetBinding_2 (int keynum, const char *binding, int tfClassNum) {
+	int keys[2];	
+	char **bindlist;
+
 	if (keynum == -1)
 		return;
 
+	keys[0] = keys[1] = -1;
+	if (tfClassNum >= 0) 
+		bindlist = classbindings[tfClassNum];
+	 else 
+		bindlist = keybindings;	
+	if (tfClassNum >= 1)
+		M_FindKeysForCommand (binding, keys);
+	else
+		M_FindKeysForCommand_2 (binding, keys, tfClassNum);
+	
+	if (keys[1] != -1) {
+		if (keys[0] != keynum)
+			Q_free(bindlist[keys[0]]);
+		if (keys[1] != keynum)
+			Q_free(bindlist[keys[1]]);
+	}
+	
 #ifndef __APPLE__
 	if (keynum == K_CTRL || keynum == K_ALT || keynum == K_SHIFT || keynum == K_WIN) {
-		Key_SetBinding(keynum + 1, binding);
-		Key_SetBinding(keynum + 2, binding);
+		Key_SetBinding_2(keynum + 1, binding, tfClassNum);
+		Key_SetBinding_2(keynum + 2, binding, tfClassNum);
 		return;
 	}
 #endif
 
 	// free (and hence Q_free) is safe to call with a NULL argument
-	Q_free (keybindings[keynum]);
-	keybindings[keynum] = Q_strdup(binding);
+	Q_free (bindlist[keynum]);
+	bindlist[keynum] = Q_strdup(binding);
+	if (tfClassNum >= 0)
+		SaveConfig_2(classconfigfiles[tfClassNum], tfClassNum);
 }
 
-void Key_Unbind (int keynum) {
+void Key_Unbind_2 (int keynum, int tfClassNum) {
+	char **bindlist;
+	if (tfClassNum >= 0)
+		bindlist = classbindings[tfClassNum];
+	else 
+		bindlist = keybindings;
+	
 	if (keynum == -1)
 		return;
 
@@ -1624,8 +1683,13 @@ void Key_Unbind (int keynum) {
 	}
 
 	// free (and hence Q_free) is safe to call with a NULL argument
-	Q_free (keybindings[keynum]);
-	keybindings[keynum] = NULL;
+	Q_free (bindlist[keynum]);
+	bindlist[keynum] = NULL;
+}
+
+void Key_Unbind (int keynum) {
+	int tfClassNum = -1;
+	Key_Unbind_2 (keynum, tfClassNum);
 }
 
 void Key_Unbind_f (void) {
@@ -1713,6 +1777,47 @@ void Key_Bind_f (void) {
 
 	// copy the rest of the command line
 	Key_SetBinding (b, Cmd_MakeArgs(2));
+}
+
+void Key_Bind_Class_f (void) {
+	int c, b, tfClassNum;
+	char **bindlist;
+	tfClassNum = atoi(Cmd_Argv(1));
+	bindlist = classbindings[tfClassNum];
+
+	c = Cmd_Argc();
+
+	if (c < 2) {
+		Com_Printf ("Usage: %s <key> [command] : attach a command to a key\n", Cmd_Argv(0));
+		return;
+	}
+	b = Key_StringToKeynum (Cmd_Argv(2));
+	if (b == -1) {
+		Com_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(2));
+		return;
+	}
+	if (c == 2) {
+#ifndef __APPLE__
+		if ((b == K_CTRL || b == K_ALT || b == K_SHIFT || b == K_WIN) && (bindlist[b + 1] || bindlist[b + 2])) {
+
+			if (bindlist[b + 1] && bindlist[b + 2] && !strcmp(bindlist[b + 1], bindlist[b + 2])) {
+				Com_Printf ("\"%s\" = \"%s\"\n", Cmd_Argv(2), bindlist[b + 1]);
+			} else {
+				Key_PrintBindInfo(b + 1, NULL);
+				Key_PrintBindInfo(b + 2, NULL);
+			}
+		} else
+#endif
+		{
+
+			//		and the following should print "ctrl (etc) is not bound" since K_CTRL cannot be bound
+			Key_PrintBindInfo(b, Cmd_Argv(3));
+		}
+		return;
+	}
+
+	// copy the rest of the command line
+	Key_SetBinding_2 (b, Cmd_MakeArgs(3), tfClassNum);
 }
 
 void Key_BindList_f (void) {
@@ -1891,6 +1996,7 @@ void Key_Init (void) {
 	// register our functions
 	Cmd_AddCommand("bindlist",Key_BindList_f);
 	Cmd_AddCommand("bind",Key_Bind_f);
+	Cmd_AddCommand("bindcfgclass",Key_Bind_Class_f);
 	Cmd_AddCommand("unbind",Key_Unbind_f);
 	Cmd_AddCommand("unbindall",Key_Unbindall_f);
 	Cvar_SetCurrentGroup(CVAR_GROUP_CONSOLE);
