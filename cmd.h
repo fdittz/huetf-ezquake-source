@@ -70,6 +70,7 @@ void Cbuf_Execute (void);
 // Normally called once per frame, but may be explicitly invoked.
 // Do not call inside a command function!
 
+void Cbuf_AddAlias(const char *alias, const char * command) ;
 //===========================================================================
 
 /*

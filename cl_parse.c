@@ -1480,6 +1480,29 @@ void CL_ParseServerData (void)
 		Cvar_SetValue (&v_iroll_level, 0.1);
 		Cvar_SetValue (&v_ipitch_level, 0.3);
 		Cvar_SetValue (&v_idlescale, 0);
+			//add builtin aliases
+	Cbuf_AddAlias("play_count","play gren.wav");
+    Cbuf_AddText("msg_trigger play_count \"renade primed\"");
+
+	Cbuf_AddAlias("huetfclient_antiemp", "\"discard; drop_toss; drop_toss; drop_toss; drop_ditch; drop_ditch; drop_ditch; drop_ditch\"");
+	Cbuf_AddAlias("huetfclient_drop_ditch","\"wait; dropammo; wait; impulse 1; wait\"");
+	Cbuf_AddAlias("huetfclient_drop_toss","\"wait; dropammo; wait; impulse 3; wait\"");
+	Cbuf_AddAlias("huetfclient_drop_cell","\"wait; dropammo; wait; impulse 4; wait\"");
+	Cbuf_AddAlias("+huetfclient_zoom","\"set oldcrosshairsize $crosshairsize; set oldsens $sensitivity;set_calc fov $default_fov / 4; set_calc sensitivity $sensitivity / 4\"");
+	Cbuf_AddAlias("-huetfclient_zoom","\"crosshairsize $oldcrosshairsize; fov $default_fov; sensitivity $oldsens\"");
+	Cbuf_AddAlias("+huetfclient_rjump","\"weapon 7;+attack;+jump\"");
+	Cbuf_AddAlias("-huetfclient_rjump","\"-attack;-jump\"");
+	Cbuf_AddAlias("+det255","\"impulse 168; wait; impulse 255\"");
+	Cbuf_AddAlias("-det255","\"impulse 169;\"");
+	Cbuf_AddAlias("huetfclient_pipejump","\"weapon 7;+jump;detpipe;wait;-jump;wait\"");
+
+	Cbuf_AddAlias("huetfclient_gren1", "\"huetfclient_grenp1\"");
+	Cbuf_AddAlias("huetfclient_grenp1", "\"+gren1; alias huetfclient_gren1 huetfclient_grent1\"");
+	Cbuf_AddAlias("huetfclient_grent1", "\"-gren1; alias huetfclient_gren1 huetfclient_grenp1\"");
+
+	Cbuf_AddAlias("huetfclient_gren2", "\"huetfclient_grenp2\"");
+	Cbuf_AddAlias("huetfclient_grenp2", "\"+gren2; alias huetfclient_gren2 huetfclient_grent2\"");
+	Cbuf_AddAlias("huetfclient_grent2", "\"-gren2; alias huetfclient_gren2 huetfclient_grenp2\"");
 	}
 
 	if (strcasecmp(cls.gamedirfile, str)) 

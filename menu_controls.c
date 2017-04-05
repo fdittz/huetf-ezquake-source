@@ -429,8 +429,16 @@ setting settbinds_arr[] = {
 	ADDSET_ADVANCED_SECTION(),
 	ADDSET_BIND("Swim Up", "+moveup"),
 	ADDSET_BIND("Swim Down", "+movedown"),
-	ADDSET_BIND("Zoom In/Out", "+zoom"),
+	ADDSET_BIND("Zoom In/Out", "+huetfclient_zoom"),
 	ADDSET_BASIC_SECTION(),
+
+	ADDSET_SEPARATOR("TEAM FORTRESS SPECIFIC"),
+	ADDSET_BIND("Flag Information", "flaginfo"),
+	ADDSET_BIND("Inventory Information", "inv"),
+	ADDSET_BIND("Drop Flag", "dropitems"),
+	ADDSET_BIND("Discard Ammo", "discard"),
+	ADDSET_BIND("Grenade 1 (Hand/Caltrops/Impact)", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2 (Class Grenade)", "huetfclient_gren2"),
 
 	ADDSET_SEPARATOR("Weapons"),
 	ADDSET_BIND("Previous Weapon", "weapon 12"),
@@ -495,24 +503,24 @@ setting settbinds_arr[] = {
 
 setting scoutbinds_arr[] = {
 	ADDSET_BIND("Toggle Autoscanner", "autoscan"),
-	ADDSET_BIND("Anti-EMP Discard", "antiempscout"),
-	ADDSET_BIND("Grenade 1: Impact/Caltrop", "grantp1"),
-	ADDSET_BIND("Grenade 2: Concussion", "grantp2")
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Impact/Caltrop", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Concussion", "huetfclient_gren2")
 };
 
 setting sniperbinds_arr[] = {
-	ADDSET_BIND("Toggle Autozoom", "autozoom"),
-	ADDSET_BIND("Anti-EMP Discard", "antiempsniper"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: Flare", "grantp2")
+	ADDSET_BIND("Zoom In/Out", "+huetfclient_zoom"),
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Flare", "huetfclient_gren2")
 };
 
 setting soldierbinds_arr[] = {	
-	ADDSET_BIND("Rocket Jump (attack + jump)", "rjump"),
+	ADDSET_BIND("Rocket Jump (attack + jump)", "+huetfclient_rjump"),
 	ADDSET_BIND("Reload", "reload"),
-	ADDSET_BIND("Anti-EMP Discard", "antiempsoldier"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: Nail Grenade", "grantp2")
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Nail Grenade", "huetfclient_gren2")
 };
 
 setting demomanbinds_arr[] = {	
@@ -522,44 +530,46 @@ setting demomanbinds_arr[] = {
 	ADDSET_BIND("Set Detpack - 20 Seconds", "+det20"),
 	ADDSET_BIND("Set Detpack - 50 Seconds", "+det50"),
 	ADDSET_BIND("Set Detpack - 255 Seconds", "+det225"),
-	ADDSET_BIND("Anti-EMP Discard", "antiempdemoman"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: Mirv Grenade", "grantp2")
+	ADDSET_BIND("Pipebomb Jump (attack + detpipe)","huetfclient_pipejump"),
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Mirv Grenade", "huetfclient_gren2")
 };
 
 setting medicbinds_arr[] = {
-	ADDSET_BIND("Anti-EMP Discard", "antiempmedic"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: Concussion", "grantp2")
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Concussion", "huetfclient_gren2")
 };
 
 setting hwguybinds_arr[] = {
-	ADDSET_BIND("Anti-EMP Discard", "antiemphwguy"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: Mirv Grenade", "grantp2")
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Mirv Grenade", "huetfclient_gren2")
 };
 
 setting pyrobinds_arr[] = {
-	ADDSET_BIND("Anti-EMP Discard", "antiemppyro"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: Napalm Grenade", "grantp2")
+	ADDSET_BIND("Rocket Jump (attack + jump)", "+huetfclient_rjump"),
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Napalm Grenade", "huetfclient_gren2")
 };
 
 setting spybinds_arr[] = {
 	ADDSET_BIND("Disguise", "disguise"),
 	ADDSET_BIND("Feign Death", "feign"),
-	ADDSET_BIND("Anti-EMP Discard", "antiempspy"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: Gas Grenade", "grantp2")
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: Gas Grenade", "huetfclient_gren2")
 };
 
 setting engineerbinds_arr[] = {
 	ADDSET_BIND("Build Menu", "build"),
 	ADDSET_BIND("Detonate Dispenser", "detdispenser"),
 	ADDSET_BIND("Detonate Sentry Gun", "detsentry"),
-	ADDSET_BIND("Anti-EMP Discard", "antiempspy"),
-	ADDSET_BIND("Grenade 1: Hand Grenade", "grantp1"),
-	ADDSET_BIND("Grenade 2: EMP Grenade", "grantp2")
+	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
+	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
+	ADDSET_BIND("Grenade 2: EMP Grenade", "huetfclient_gren2")
 };
 
 qbool Menu_Controls_Mouse_Event(const mouse_state_t *ms)

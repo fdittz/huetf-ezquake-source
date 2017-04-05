@@ -168,6 +168,14 @@ void Cbuf_AddTextEx (cbuf_t *cbuf, const char *text)
 	cbuf->text_end = cbuf->text_start + new_bufsize;
 }
 
+void Cbuf_AddAlias(const char *alias, const char * command) {
+	char *buf;
+	buf = Q_malloc(strlen(alias) + strlen(command) + 10);
+	sprintf(buf, "alias %s %s\n", alias, command);
+	Cbuf_AddText(buf);
+	Q_free(buf);
+}
+
 //Adds command text at the beginning of the buffer
 void Cbuf_InsertTextEx (cbuf_t *cbuf, const char *text)
 {
