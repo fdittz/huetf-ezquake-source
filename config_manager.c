@@ -1122,9 +1122,9 @@ void LoadClassConfig(const char * cfgname, int tfClassNum)
 		return;
 	}
 
-	con_suppress = true;
-	ResetConfigs(false, true);
-	con_suppress = false;
+//	con_suppress = true;
+//	ResetConfigs(false, true);
+//	con_suppress = false;
 	
 	Cbuf_AddText ("cl_warncmd 0\n");
 

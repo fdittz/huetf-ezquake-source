@@ -62,7 +62,7 @@ else
 
     ifeq ($(SYS),Darwin)
         # 10.11 El Capitan does not search for header files here by default
-        CFLAGS_c += -I/usr/local/include -mmacosx-version-min=10.8
+        CFLAGS_c += -I/usr/local/include -I/usr/local/Cellar/jpeg/8d/include -mmacosx-version-min=10.8
 
         # For re-link/deploy dynamic libraries
         LDFLAGS_c += -headerpad_max_install_names -mmacosx-version-min=10.8
@@ -110,7 +110,7 @@ CFLAGS_c += $(PNG_CFLAGS)
 LIBS_c += $(PNG_LIBS)
 
 JPEG_CFLAGS ?= -DWITH_JPEG
-JPEG_LIBS ?= -ljpeg
+JPEG_LIBS ?= -ljpeg -L/usr/local/Cellar/jpeg/8d/lib
 CFLAGS_c += $(JPEG_CFLAGS)
 LIBS_c += $(JPEG_LIBS)
 
