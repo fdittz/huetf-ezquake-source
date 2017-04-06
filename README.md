@@ -1,3 +1,25 @@
+HueTF EZQuake Client!
+Windows binary (for testing purposes): https://github.com/fdittz/huetf-ezquake-source/raw/master/ezquake.exe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ezQuake — Modern QuakeWorld Client
 [![Build Status](https://travis-ci.org/ezQuake/ezquake-source.svg?branch=master)](https://travis-ci.org/ezQuake/ezquake-source)
 
