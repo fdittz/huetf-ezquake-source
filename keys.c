@@ -1624,10 +1624,11 @@ char *Key_KeynumToString (int keynum) {
 
 void Key_SetBinding (int keynum, const char *binding) {
 	int tfClassNum = -1;
-	Key_SetBinding_2 (keynum, binding, tfClassNum);
+	qbool savecfg = false;
+	Key_SetBinding_2 (keynum, binding, tfClassNum, savecfg);
 }
 
-void Key_SetBinding_2 (int keynum, const char *binding, int tfClassNum) {
+void Key_SetBinding_2 (int keynum, const char *binding, int tfClassNum, qbool savecfg) {
 	int keys[2];	
 	char **bindlist;
 
@@ -1653,8 +1654,8 @@ void Key_SetBinding_2 (int keynum, const char *binding, int tfClassNum) {
 	
 #ifndef __APPLE__
 	if (keynum == K_CTRL || keynum == K_ALT || keynum == K_SHIFT || keynum == K_WIN) {
-		Key_SetBinding_2(keynum + 1, binding, tfClassNum);
-		Key_SetBinding_2(keynum + 2, binding, tfClassNum);
+		Key_SetBinding_2(keynum + 1, binding, tfClassNum, savecfg);
+		Key_SetBinding_2(keynum + 2, binding, tfClassNum, savecfg);
 		return;
 	}
 #endif
@@ -1662,11 +1663,15 @@ void Key_SetBinding_2 (int keynum, const char *binding, int tfClassNum) {
 	// free (and hence Q_free) is safe to call with a NULL argument
 	Q_free (bindlist[keynum]);
 	bindlist[keynum] = Q_strdup(binding);
-	if (tfClassNum >= 0)
-		SaveConfig_2(classconfigfiles[tfClassNum], tfClassNum);
+	if (savecfg) {
+		if (tfClassNum >= 0)
+			SaveConfig_2(classconfigfiles[tfClassNum], tfClassNum, true);
+		else
+			SaveConfig_2(COM_SkipPath("config.cfg"), -1, true);
+	}
 }
 
-void Key_Unbind_2 (int keynum, int tfClassNum) {
+void Key_Unbind_2 (int keynum, int tfClassNum, qbool savecfg) {
 	char **bindlist;
 	if (tfClassNum >= 0)
 		bindlist = classbindings[tfClassNum];
@@ -1685,13 +1690,18 @@ void Key_Unbind_2 (int keynum, int tfClassNum) {
 	// free (and hence Q_free) is safe to call with a NULL argument
 	Q_free (bindlist[keynum]);
 	bindlist[keynum] = NULL;
-	if (tfClassNum >= 0)
-		SaveConfig_2(classconfigfiles[tfClassNum], tfClassNum);
+	if (savecfg) {
+		if (tfClassNum >= 0)
+			SaveConfig_2(classconfigfiles[tfClassNum], tfClassNum, true);
+		else
+			SaveConfig_2(COM_SkipPath("config.cfg"), -1, true);
+	}
 }
 
 void Key_Unbind (int keynum) {
 	int tfClassNum = -1;
-	Key_Unbind_2 (keynum, tfClassNum);
+	qbool savecfg = false;
+	Key_Unbind_2 (keynum, tfClassNum,savecfg);
 }
 
 void Key_Unbind_f (void) {
@@ -1819,7 +1829,7 @@ void Key_Bind_Class_f (void) {
 	}
 
 	// copy the rest of the command line
-	Key_SetBinding_2 (b, Cmd_MakeArgs(3), tfClassNum);
+	Key_SetBinding_2 (b, Cmd_MakeArgs(3), tfClassNum, true);
 }
 
 void Key_BindList_f (void) {

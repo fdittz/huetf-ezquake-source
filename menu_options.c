@@ -237,7 +237,8 @@ const char *priority_enum[] = { "low", "-1", "normal", "0", "high", "1" };
 #endif
 
 
-void DefaultConfig(void) { Cbuf_AddText("cfg_reset full\n"); }
+void DefaultConfig(void) { //Cbuf_AddText("cfg_reset full\n"); 
+}
 
 settings_page settmisc;
 
@@ -1227,7 +1228,7 @@ void Menu_Options_Init(void) {
 	CTab_AddPage(&options_tab, "View", OPTPG_HUD, &options_view_handlers);
 	CTab_AddPage(&options_tab, "Misc", OPTPG_MISC, &options_misc_handlers);
 	CTab_AddPage(&options_tab, "System", OPTPG_SYSTEM, &options_system_handlers);
-	CTab_AddPage(&options_tab, "Config", OPTPG_CONFIG, &options_config_handlers);
+	//CTab_AddPage(&options_tab, "Config", OPTPG_CONFIG, &options_config_handlers);
 	CTab_SetCurrentId(&options_tab, OPTPG_PLAYER);
 }
 

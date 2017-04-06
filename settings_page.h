@@ -46,7 +46,7 @@ void Settings_OnShow(settings_page *tab);
 
 // key press handler
 qbool Settings_Key(settings_page* page, int key, wchar unichar);
-qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum);
+qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum, qbool savecfg);
 
 // mouse move handler
 qbool Settings_Mouse_Event(settings_page * page, const mouse_state_t *ms);

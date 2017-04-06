@@ -645,7 +645,7 @@ static void ResetPlusCommands(void)
 }
 
 void ResetBinds(void)
-{
+{	
 	Key_Unbindall_f();
 
 	Key_SetBinding(K_ESCAPE, "togglemenu");
@@ -796,7 +796,6 @@ static void Config_PrintPreamble(FILE *f)
 static void ResetConfigs(qbool resetall, qbool read_legacy_configs)
 {
 	vfsfile_t *v;
-
 	ResetVariables(CVAR_SERVERINFO, !resetall);
 	DeleteUserAliases();
 	DeleteUserVariables();
@@ -816,25 +815,21 @@ static void ResetConfigs(qbool resetall, qbool read_legacy_configs)
 	}
 }
 
-void DumpConfig(char *name)
-{
-	FILE	*f;
-	char	*outfile, *newlines = "\n";
 
-	if (cfg_use_home.integer) // homedir
-		outfile = va("%s/%s/%s", com_homedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "" : com_gamedirfile, name);
-	else // basedir
-		outfile = va("%s/%s/configs/%s", com_basedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "ezquake" : com_gamedirfile, name);
+void writeConfigFile_TF(char *outfile, qbool quiet) {
+
+	FILE	*f;
+	char	*newlines = "\n";
 
 	if (!(f	= fopen	(outfile, "w"))) {
 		FS_CreatePath(outfile);
 		if (!(f	= fopen	(outfile, "w"))) {
-			Com_Printf ("Couldn't write	%s.\n",	name);
+			Com_Printf ("Couldn't write	%s.\n",	outfile);
 			return;
 		}
 	}
-
-	Com_Printf("Saving configuration to %s\n", outfile);
+	if (!quiet)
+		Com_Printf("Saving configuration to %s\n", outfile);
 
 	Config_PrintPreamble(f);
 
@@ -880,6 +875,25 @@ void DumpConfig(char *name)
 	}
 
 	fclose(f);
+}
+
+void DumpConfig(char *name)
+{
+	char	*outfile;
+
+	if (cfg_use_home.integer) // homedir
+		outfile = va("%s/%s/%s", com_homedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "" : com_gamedirfile, name);
+	else // basedir
+		outfile = va("%s/%s/configs/%s", com_basedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "ezquake" : com_gamedirfile, name);
+
+	writeConfigFile_TF(outfile, false);
+}
+
+void DumpConfigInGamedir_TF(char *name)
+{
+	char	*outfile;
+	outfile = va("%s/fortress/%s", com_basedir, name);
+	writeConfigFile_TF(outfile, true);
 }
 
 void DumpConfig_TF(char *name, int tfClassNum)
@@ -958,7 +972,7 @@ void DumpHUD(const char *name)
 
 extern qbool filesystemchanged; // fix bug 2359900
 
-void SaveConfig_2(const char *cfgname, int tfClassNum)
+void SaveConfig_2(const char *cfgname, int tfClassNum, qbool writeGamedir)
 {
 	char filename[MAX_PATH] = {0}, *filename_ext, *backupname_ext;
 	size_t len;
@@ -991,6 +1005,8 @@ void SaveConfig_2(const char *cfgname, int tfClassNum)
 	}
 	if (tfClassNum >= 0)
 		DumpConfig_TF(filename,tfClassNum);
+	else if (writeGamedir)
+		DumpConfigInGamedir_TF(filename);
 	else
 		DumpConfig(filename);
 	filesystemchanged = true; // fix bug 2359900
@@ -999,7 +1015,7 @@ void SaveConfig_2(const char *cfgname, int tfClassNum)
 void SaveConfig(const char *cfgname)
 {
 	int tfClassNum = -1;
-	SaveConfig_2(cfgname,tfClassNum);
+	SaveConfig_2(cfgname,tfClassNum, false);
 }
 
 void SaveConfig_f(void)
@@ -1191,7 +1207,7 @@ void LoadConfig_f(void)
 	}
 
 	con_suppress = true;
-	ResetConfigs(false, true);
+	//ResetConfigs(false, true);
 	con_suppress = false;
 
 	if(use_home)

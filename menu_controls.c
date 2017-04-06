@@ -101,7 +101,7 @@ void CT_Opt_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPage_t *p
 }
 
 int CT_Opt_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key(&settbinds, k, unichar);
+	return Settings_Key_2(&settbinds, k, unichar, -1, true);
 }
 
 void OnShow_SettBinds(void) { Settings_OnShow(&settbinds); }
@@ -131,7 +131,7 @@ void CT_Opt_Scout_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPag
 }
 
 int CT_Opt_Scout_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&scoutbinds, k, unichar, SCOUT_NUM);
+	return Settings_Key_2(&scoutbinds, k, unichar, SCOUT_NUM, true);
 }
 
 void OnShow_SettScoutBinds(void) { Settings_OnShow(&scoutbinds); LoadClassConfig(classconfigfiles[SCOUT_NUM],SCOUT_NUM);}
@@ -159,7 +159,7 @@ void CT_Opt_Sniper_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPa
 }
 
 int CT_Opt_Sniper_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&sniperbinds, k, unichar, SNIPER_NUM);
+	return Settings_Key_2(&sniperbinds, k, unichar, SNIPER_NUM, true);
 }
 
 void OnShow_SettSniperBinds(void) { Settings_OnShow(&sniperbinds); LoadClassConfig(classconfigfiles[SNIPER_NUM],SNIPER_NUM); }
@@ -187,7 +187,7 @@ void CT_Opt_Soldier_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabP
 }
 
 int CT_Opt_Soldier_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&soldierbinds, k, unichar, SOLDIER_NUM);
+	return Settings_Key_2(&soldierbinds, k, unichar, SOLDIER_NUM, true);
 }
 
 void OnShow_SettSoldierBinds(void) { Settings_OnShow(&soldierbinds); LoadClassConfig(classconfigfiles[SOLDIER_NUM],SOLDIER_NUM); }
@@ -215,7 +215,7 @@ void CT_Opt_Demoman_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabP
 }
 
 int CT_Opt_Demoman_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&demomanbinds, k, unichar, DEMOMAN_NUM);
+	return Settings_Key_2(&demomanbinds, k, unichar, DEMOMAN_NUM, true);
 }
 
 void OnShow_SettDemomanBinds(void) { Settings_OnShow(&demomanbinds); LoadClassConfig(classconfigfiles[DEMOMAN_NUM],DEMOMAN_NUM); }
@@ -243,7 +243,7 @@ void CT_Opt_Medic_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPag
 }
 
 int CT_Opt_Medic_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&medicbinds, k, unichar, MEDIC_NUM);
+	return Settings_Key_2(&medicbinds, k, unichar, MEDIC_NUM, true);
 }
 
 void OnShow_SettMedicBinds(void) { Settings_OnShow(&medicbinds); LoadClassConfig(classconfigfiles[MEDIC_NUM],MEDIC_NUM); }
@@ -271,7 +271,7 @@ void CT_Opt_Hwguy_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPag
 }
 
 int CT_Opt_Hwguy_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&hwguybinds, k, unichar, HWGUY_NUM);
+	return Settings_Key_2(&hwguybinds, k, unichar, HWGUY_NUM, true);
 }
 
 void OnShow_SettHwguyBinds(void) { Settings_OnShow(&hwguybinds); LoadClassConfig(classconfigfiles[HWGUY_NUM],HWGUY_NUM); }
@@ -299,7 +299,7 @@ void CT_Opt_Pyro_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPage
 }
 
 int CT_Opt_Pyro_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&pyrobinds, k, unichar, PYRO_NUM);
+	return Settings_Key_2(&pyrobinds, k, unichar, PYRO_NUM, true);
 }
 
 void OnShow_SettPyroBinds(void) { Settings_OnShow(&pyrobinds); LoadClassConfig(classconfigfiles[PYRO_NUM],PYRO_NUM); }
@@ -327,7 +327,7 @@ void CT_Opt_Spy_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTabPage_
 }
 
 int CT_Opt_Spy_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&spybinds, k, unichar, SPY_NUM);
+	return Settings_Key_2(&spybinds, k, unichar, SPY_NUM, true);
 }
 
 void OnShow_SettSpyBinds(void) { Settings_OnShow(&spybinds); LoadClassConfig(classconfigfiles[SPY_NUM],SPY_NUM); }
@@ -355,7 +355,7 @@ void CT_Opt_Engineer_Binds_Draw (int x2, int y2, int w, int h, CTab_t *tab, CTab
 }
 
 int CT_Opt_Engineer_Binds_Key (int k, wchar unichar, CTab_t *tab, CTabPage_t *page) {
-	return Settings_Key_2(&engineerbinds, k, unichar, ENGINEER_NUM);
+	return Settings_Key_2(&engineerbinds, k, unichar, ENGINEER_NUM, true);
 }
 
 void OnShow_SettEngineerBinds(void) { Settings_OnShow(&engineerbinds); LoadClassConfig(classconfigfiles[ENGINEER_NUM],ENGINEER_NUM); }

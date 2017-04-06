@@ -26,7 +26,7 @@ void ConfigManager_Init (void);
 void Config_QuitSave(void);
 void ResetBinds(void);
 void SaveConfig(const char *cfgname);
-void SaveConfig_2(const char *cfgname, int tfClassNum);
+void SaveConfig_2(const char *cfgname, int tfClassNum, qbool writeGamedir);
 void LoadClassConfig(const char *cfgname, int tfClassNum);
 
 extern cvar_t	cfg_save_unchanged, cfg_legacy_exec;

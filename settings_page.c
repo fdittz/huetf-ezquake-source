@@ -367,10 +367,10 @@ static void Setting_Reset(setting* set)
 	}
 }
 
-static void Setting_BindKey_2(setting* set, int key, int tfClassNum)
+static void Setting_BindKey_2(setting* set, int key, int tfClassNum, qbool savecfg)
 {
-	if (tfClassNum >= 0)
-		Key_SetBinding_2(key, set->varname, tfClassNum);
+	if (savecfg)
+		Key_SetBinding_2(key, set->varname, tfClassNum, savecfg);
 	else
 		Key_SetBinding(key, set->varname);
 }
@@ -378,10 +378,11 @@ static void Setting_BindKey_2(setting* set, int key, int tfClassNum)
 static void Setting_BindKey(setting* set, int key)
 {
 	int tfClassNum = -1;
-	Setting_BindKey_2(set, key, tfClassNum);
+	qbool savecfg = false;
+	Setting_BindKey_2(set, key, tfClassNum, savecfg);
 }
 
-static void M_UnbindCommand_2 (const char *command, int tfClassNum) {
+static void M_UnbindCommand_2 (const char *command, int tfClassNum, qbool savecfg) {
 	int j, l, sizeofArray;
 	char *b;
 	char **bindlist;
@@ -400,8 +401,8 @@ static void M_UnbindCommand_2 (const char *command, int tfClassNum) {
 		if (!b)
 			continue;
 		if (!strncmp (b, command, l) ) {
-			if (tfClassNum >= 0)
-				Key_Unbind_2 (j, tfClassNum);
+			if (savecfg)
+				Key_Unbind_2 (j, tfClassNum, savecfg);
 			else
 				Key_Unbind (j);
 		}
@@ -412,13 +413,14 @@ static void M_UnbindCommand_2 (const char *command, int tfClassNum) {
 
 static void M_UnbindCommand (const char *command) {
 	int tfClassNum = -1;
-	M_UnbindCommand_2 (command, tfClassNum);
+	qbool savecfg = false;
+	M_UnbindCommand_2 (command, tfClassNum, savecfg);
 }
 
-static void Setting_UnbindKey_2(setting* set, int tfClassNum)
+static void Setting_UnbindKey_2(setting* set, int tfClassNum, qbool savecfg)
 {
-	if (tfClassNum >= 0)
-		M_UnbindCommand_2(set->varname, tfClassNum);
+	if (savecfg)
+		M_UnbindCommand_2(set->varname, tfClassNum, savecfg);
 	else
 		M_UnbindCommand(set->varname);
 }
@@ -426,7 +428,8 @@ static void Setting_UnbindKey_2(setting* set, int tfClassNum)
 static void Setting_UnbindKey(setting* set)
 {
 	int tfClassNum = -1;
-	Setting_UnbindKey_2(set, tfClassNum);
+	qbool savecfg = false;
+	Setting_UnbindKey_2(set, tfClassNum, savecfg);
 }
 
 static int Settings_PageHeight(const settings_page *page)
@@ -673,7 +676,7 @@ static void Setting_Slider_Click(const settings_page *page, const mouse_state_t 
 	}
 }
 
-qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum)
+qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum, qbool savecfg)
 {
 	qbool up = false;
 	setting_type type;
@@ -685,8 +688,8 @@ qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum)
 
 	if (tab->mode == SPM_BINDING) {
 		if (key != K_ESCAPE) {
-			if (tfClassNum >= 0) {
-				Setting_BindKey_2(tab->settings + tab->marked, key, tfClassNum);
+			if (savecfg) {
+				Setting_BindKey_2(tab->settings + tab->marked, key, tfClassNum, savecfg);
 			}
 			else {
 				Setting_BindKey(tab->settings + tab->marked, key);
@@ -786,7 +789,7 @@ qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum)
 		case K_DEL:
 			     switch (type) {
 				     case stt_string: CEditBox_Key(&editbox, key, unichar); return true;
-				     case stt_bind: ((tfClassNum >= 0) ? Setting_UnbindKey_2(tab->settings + tab->marked, tfClassNum) : Setting_UnbindKey(tab->settings + tab->marked)); return true;
+				     case stt_bind: (savecfg ? Setting_UnbindKey_2(tab->settings + tab->marked, tfClassNum, savecfg) : Setting_UnbindKey(tab->settings + tab->marked)); return true;
 				     default: Setting_Reset(tab->settings + tab->marked); return true;
 			     }
 
@@ -838,7 +841,8 @@ qbool Settings_Key_2(settings_page* tab, int key, wchar unichar, int tfClassNum)
 qbool Settings_Key(settings_page* tab, int key, wchar unichar)
 {
 	int tfClassNum = -1;
-	return Settings_Key_2(tab, key, unichar, tfClassNum);
+	qbool savecfg = false;
+	return Settings_Key_2(tab, key, unichar, tfClassNum, savecfg);
 }
 
 static void Setting_Click(settings_page* page, const mouse_state_t *ms)

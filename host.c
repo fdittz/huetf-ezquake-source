@@ -596,7 +596,9 @@ void Host_Init (int argc, char **argv, int default_memsize)
 	Commands_For_Configs_Init ();
 	Browser_Init2();
 	ConfigManager_Init();
-	ResetBinds();
+	//ResetBinds();
+	Cbuf_AddEarlyCommands ();
+	Cbuf_Execute ();
 
 	i = COM_CheckParm("+cfg_load");
 
@@ -608,15 +610,17 @@ void Host_Init (int argc, char **argv, int default_memsize)
 	}
 	snprintf(cfg, sizeof(cfg), "%s", cfg_name);
 	COM_ForceExtensionEx (cfg, ".cfg", sizeof (cfg));
-	Cbuf_AddText(va("cfg_load %s\n", cfg));
-	Cbuf_Execute();
 
-	Cbuf_AddEarlyCommands ();
-	Cbuf_Execute ();
+	Cbuf_Execute();
+	Cbuf_AddText ("cfg_use_gamedir 1\n");
+	Cbuf_AddText ("gamedir fortress\n");
+	Cbuf_AddText(va("exec %s\n", cfg));	
+
 
 	Con_Init ();
 	NET_InitClient ();
 	Netchan_Init ();
+
 
 #if (!defined WITH_PNG_STATIC || !defined WITH_JPEG_STATIC || defined WITH_MP3_PLAYER)
 	QLib_Init();
@@ -661,8 +665,7 @@ void Host_Init (int argc, char **argv, int default_memsize)
 		Cvar_Set(v, val);
 	}
 	
-	Hud_262LoadOnFirstStart();
-
+	Hud_262LoadOnFirstStart();	
 	Com_Printf_State (PRINT_INFO, "Exe: "__DATE__" "__TIME__"\n");
 	Com_Printf_State (PRINT_INFO, "Hunk allocation: %4.1f MB\n", (float) host_memsize / (1024 * 1024));
 	Com_Printf("\n");
@@ -682,9 +685,8 @@ void Host_Init (int argc, char **argv, int default_memsize)
 
 	Cmd_StuffCmds_f ();		// process command line arguments
 	Cbuf_AddText ("cl_warncmd 1\n");
-	Cbuf_AddText ("cfg_use_gamedir 1\n");	
-	Cbuf_AddText ("gamedir fortress\n");
-	Cbuf_AddText ("exec config.cfg\n");
+	
+	//Cbuf_AddText ("exec config.cfg\n");
 
 
 	#ifdef WIN32
