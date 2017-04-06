@@ -1685,6 +1685,8 @@ void Key_Unbind_2 (int keynum, int tfClassNum) {
 	// free (and hence Q_free) is safe to call with a NULL argument
 	Q_free (bindlist[keynum]);
 	bindlist[keynum] = NULL;
+	if (tfClassNum >= 0)
+		SaveConfig_2(classconfigfiles[tfClassNum], tfClassNum);
 }
 
 void Key_Unbind (int keynum) {

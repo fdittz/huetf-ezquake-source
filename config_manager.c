@@ -898,8 +898,6 @@ void DumpConfig_TF(char *name, int tfClassNum)
 		}
 	}
 
-	Com_Printf("Saving configuration to %s\n", outfile);
-
 	Config_PrintPreamble(f);
 
 	Config_PrintHeading(f, "A L I A S E S,  C O N F I G S ");
@@ -911,27 +909,6 @@ void DumpConfig_TF(char *name, int tfClassNum)
 	fclose(f);
 }
 
-/*void DumpTFConfig(char *name) {
-	FILE	*f;
-	char	*outfile, *newlines = "\n";
-
-	if (cfg_use_home.integer) // homedir
-		outfile = va("%s/%s/%s", com_homedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "" : com_gamedirfile, name);
-	else // basedir
-		outfile = va("%s/%s/configs/%s", com_basedir, (strcmp(com_gamedirfile, "qw") == 0 || !cfg_use_gamedir.integer) ? "ezquake" : com_gamedirfile, name);
-
-	if (!(f	= fopen	(outfile, "w"))) {
-		FS_CreatePath(outfile);
-		if (!(f	= fopen	(outfile, "w"))) {
-			Com_Printf ("Couldn't write	%s.\n",	name);
-			return;
-		}
-	}
-	Config_PrintHeading(f, "K E Y   B I N D I N G S");
-	DumpBindings(f);
-	fclose(f);
-}
-*/
 void DumpHUD(const char *name)
 {
 	// Dumps all variables from CFG_GROUP_HUD into a file

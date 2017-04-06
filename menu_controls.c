@@ -609,17 +609,17 @@ void Menu_Controls_Init(void) {
 	Cvar_ResetCurrentGroup();
 
 	CTab_Init(&controls_tab);
-	CTab_AddPage(&controls_tab, "Controls", OPTPG_BINDS, &controls_controls_handlers);
-	CTab_AddPage(&controls_tab, "Scout", OPTPG_SCOUT, &controls_scout_handlers);
-	CTab_AddPage(&controls_tab, "Sniper", OPTPG_SNIPER, &controls_sniper_handlers);
-	CTab_AddPage(&controls_tab, "Soldier", OPTPG_SOLDIER, &controls_soldier_handlers);
-	CTab_AddPage(&controls_tab, "Demoman", OPTPG_DEMOMAN, &controls_demoman_handlers);
-	CTab_AddPage(&controls_tab, "Medic", OPTPG_MEDIC, &controls_medic_handlers);
-	CTab_AddPage(&controls_tab, "HWGuy", OPTPG_HWGUY, &controls_hwguy_handlers);
-	CTab_AddPage(&controls_tab, "Pyro", OPTPG_PYRO, &controls_pyro_handlers);
-	CTab_AddPage(&controls_tab, "Spy", OPTPG_SPY, &controls_spy_handlers);
-	CTab_AddPage(&controls_tab, "Engineer", OPTPG_ENGINEER, &controls_engineer_handlers);
-}
+	CTab_AddPage(&controls_tab, "General", OPTPG_BINDS, &controls_controls_handlers);
+		CTab_AddPage(&controls_tab, "Scout", OPTPG_SCOUT, &controls_scout_handlers);
+		CTab_AddPage(&controls_tab, "Sniper", OPTPG_SNIPER, &controls_sniper_handlers);
+		CTab_AddPage(&controls_tab, "Soldier", OPTPG_SOLDIER, &controls_soldier_handlers);
+		CTab_AddPage(&controls_tab, "Demoman", OPTPG_DEMOMAN, &controls_demoman_handlers);
+		CTab_AddPage(&controls_tab, "Medic", OPTPG_MEDIC, &controls_medic_handlers);
+		CTab_AddPage(&controls_tab, "HWGuy", OPTPG_HWGUY, &controls_hwguy_handlers);
+		CTab_AddPage(&controls_tab, "Pyro", OPTPG_PYRO, &controls_pyro_handlers);
+		CTab_AddPage(&controls_tab, "Spy", OPTPG_SPY, &controls_spy_handlers);
+		CTab_AddPage(&controls_tab, "Engineer", OPTPG_ENGINEER, &controls_engineer_handlers);
+	}
 
 qbool Menu_Controls_IsBindingKey (void)
 {

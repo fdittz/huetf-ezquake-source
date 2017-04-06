@@ -1481,8 +1481,10 @@ void CL_ParseServerData (void)
 		Cvar_SetValue (&v_ipitch_level, 0.3);
 		Cvar_SetValue (&v_idlescale, 0);
 			//add builtin aliases
+	Cbuf_AddText("setinfo ec on\n");    
 	Cbuf_AddAlias("play_count","play gren.wav");
-    Cbuf_AddText("msg_trigger play_count \"renade primed\"");
+    Cbuf_AddText("msg_trigger play_count \"renade primed\"\n");
+
 
 	Cbuf_AddAlias("huetfclient_antiemp", "\"discard; drop_toss; drop_toss; drop_toss; drop_ditch; drop_ditch; drop_ditch; drop_ditch\"");
 	Cbuf_AddAlias("huetfclient_drop_ditch","\"wait; dropammo; wait; impulse 1; wait\"");

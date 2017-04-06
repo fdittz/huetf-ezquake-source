@@ -682,10 +682,9 @@ void Host_Init (int argc, char **argv, int default_memsize)
 
 	Cmd_StuffCmds_f ();		// process command line arguments
 	Cbuf_AddText ("cl_warncmd 1\n");
+	Cbuf_AddText ("cfg_use_gamedir 1\n");	
 	Cbuf_AddText ("gamedir fortress\n");
 	Cbuf_AddText ("exec config.cfg\n");
-
-
 
 
 	#ifdef WIN32
