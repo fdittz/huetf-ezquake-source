@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // separator: decorating purpose
 #define ADDSET_SEPARATOR(label) { stt_separator, label, false, NULL, 0, 0, 0, NULL, NULL, NULL, NULL }
+#define ADDSET_INFO(label) { stt_info, label, false, NULL, 0, 0, 0, NULL, NULL, NULL, NULL }
 
 // blank: decorating purpose
 #define ADDSET_BLANK() { stt_blank, NULL, false, NULL, 0, 0, 0, NULL, NULL, NULL, NULL }
@@ -106,7 +107,8 @@ typedef enum  {
 	stt_bind,                  // keybinding
 	stt_advmark,               // denotes advanced settings area
 	stt_basemark,              // denotes basic settings area
-	stt_blank
+	stt_blank,
+	stt_info
 } setting_type;
 
 typedef struct {

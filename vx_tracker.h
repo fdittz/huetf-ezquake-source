@@ -40,6 +40,7 @@ extern cvar_t amf_tracker_color_suicide;	// Use this color when u suicides
 void VX_TrackerDeath(int player, int weapon, int count);
 void VX_TrackerSuicide(int player, int weapon, int count);
 void VX_TrackerFragXvsY(int player, int killer, int weapon, int player_wcount, int killer_wcount);
+void VX_TrackerFragXvsYObject(int player, int killer, int weapon);
 void VX_TrackerOddFrag(int player, int weapon, int wcount);
 
 void VX_TrackerTK_XvsY(int player, int killer, int weapon, int p_count, int p_icount, int k_count, int k_icount);
@@ -60,6 +61,7 @@ typedef enum tracktype_s
 void VX_TrackerAddText(char *msg, tracktype_t tt);
 
 char *GetWeaponName (int num);
+char *GetObjImageTeam (int num);
 void VXSCR_DrawTrackerString(void);
 void VX_TrackerThink(void);
 void VX_TrackerClear(void);

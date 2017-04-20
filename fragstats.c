@@ -41,6 +41,7 @@ typedef enum msgtype_s {
 	mt_frags,
 	mt_tkills,
 	mt_tkilled,
+	mt_destroyed,
 
 	mt_death,
 	mt_suicide,
@@ -83,6 +84,22 @@ typedef struct fragdef_s {
 	fragmsg_t	msgdata[MAX_FRAG_DEFINITIONS];
 	int			num_fragmsgs;
 } fragdef_t;
+
+typedef struct {
+	char *colorname;
+	int number;
+	int bottomcolor;	
+} team_t;
+
+team_t teams_colors[] = 
+{
+	{"blue", 1, 13},
+	{"red", 2, 4},
+	{"yellow", 3,  12},
+	{"green", 4, 11}
+};
+
+#define NUMTEAMSCOLORS (sizeof(teams_colors) / sizeof(teams_colors[0]));
 
 static fragdef_t fragdefs;
 static wclass_t wclasses[MAX_WEAPON_CLASSES];
@@ -321,6 +338,8 @@ static void LoadFragFile(char *filename, qbool quiet) {
 				} else if (!strcasecmp(Cmd_Argv(2), "X_FRAGGED_BY_Y")) {
 					_checkargs2(5, 6);
 					msgtype = mt_fragged;
+				} else if (!strcasecmp(Cmd_Argv(2), "X_OBJ_DEST_BY_Y")) {
+					msgtype = mt_destroyed;
 				} else if (!strcasecmp(Cmd_Argv(2), "X_TEAMKILLS_Y")) {
 					_checkargs2(5, 6);
 					msgtype = mt_tkills;
@@ -634,6 +653,15 @@ foundmatch:
 			fragstats[victim].streak=0;
 			break;
 		}
+		case mt_destroyed: 
+		{
+			cff->isFragMsg = true;
+			killer = (fragmsg->type == mt_fragged) ? j : i;
+			victim = (fragmsg->type == mt_fragged) ? i : j;
+			fragstats[killer].totalfrags++;
+			VX_TrackerFragXvsYObject(victim, killer, fragmsg->wclass_index);
+			break;
+		}
 		case mt_frag:
 		{
 			cff->isFragMsg = true;
@@ -835,5 +863,16 @@ char *GetWeaponName (int num)
 	if (wclasses[num].name && wclasses[num].name[0])
 		return wclasses[num].name;
 
+	return "Unknown";
+}
+
+char *GetObjImageTeam (int num)
+{
+	if (wclasses[num].shortname && wclasses[num].shortname[0]) {
+		printf("Returning here\n");
+		return wclasses[num].shortname;
+	}
+	if (wclasses[num].name && wclasses[num].name[0])
+		return wclasses[num].name;
 	return "Unknown";
 }

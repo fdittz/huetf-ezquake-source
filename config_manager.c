@@ -833,6 +833,11 @@ void writeConfigFile_TF(char *outfile, qbool quiet) {
 
 	Config_PrintPreamble(f);
 
+	if (cfg_save_binds.value) {
+		Config_PrintHeading(f, "K E Y   B I N D I N G S");
+		DumpBindings(f);
+	}
+
 	if (cfg_save_cvars.value) {
 		Config_PrintHeading(f, "V A R I A B L E S");
 		DumpVariables(f);
@@ -868,12 +873,7 @@ void writeConfigFile_TF(char *outfile, qbool quiet) {
 		DumpPlusCommands(f);
 		fprintf(f, "%s", newlines);
 	}
-
-	if (cfg_save_binds.value) {
-		Config_PrintHeading(f, "K E Y   B I N D I N G S");
-		DumpBindings(f);
-	}
-
+	
 	fclose(f);
 }
 
@@ -914,11 +914,11 @@ void DumpConfig_TF(char *name, int tfClassNum)
 
 	Config_PrintPreamble(f);
 
-	Config_PrintHeading(f, "A L I A S E S,  C O N F I G S ");
-	DumpExtras_TF(f,tfClassNum);
-
 	Config_PrintHeading(f, "K E Y   B I N D I N G S");
 	DumpBindings_TF(f, tfClassNum);
+
+	Config_PrintHeading(f, "A L I A S E S,  C O N F I G S ");
+	DumpExtras_TF(f,tfClassNum);
 
 	fclose(f);
 }

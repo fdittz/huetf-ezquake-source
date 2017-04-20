@@ -48,6 +48,7 @@ void MIng_Back(void)			{ M_LeaveMenus(); }
 
 MENU_ALIAS(MIng_ServerBrowser,"menu_slist",false);
 MENU_ALIAS(MIng_Options,"menu_options",false);
+MENU_ALIAS(MIng_Controls,"menu_controls",false);
 MENU_ALIAS(MIng_Join,"join",true);
 MENU_ALIAS(MIng_Observe,"observe",true);
 MENU_ALIAS(MIng_Disconnect,"disconnect",true);
@@ -74,6 +75,7 @@ setting single_menu_entries[] = {
 	ADDSET_ACTION("Save Game", MSP_Save, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Options", MIng_Options, ""),
+	ADDSET_ACTION("Controls", MIng_Controls, ""),
 	ADDSET_ACTION("Main Menu", MIng_MainMenu, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Return To Game", MIng_Back, ""),
@@ -89,6 +91,7 @@ setting ingame_menu_entries[] = {
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Server Browser", MIng_ServerBrowser, ""),
 	ADDSET_ACTION("Options", MIng_Options, ""),
+	ADDSET_ACTION("Controls", MIng_Controls, ""),
 	ADDSET_ACTION("Main Menu", MIng_MainMenu, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Return To Game", MIng_Back, ""),
@@ -103,6 +106,7 @@ setting democtrl_menu_entries[] = {
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Demo Browser", MDemoCtrl_DemoBrowser, ""),
 	ADDSET_ACTION("Options", MIng_Options, ""),
+	ADDSET_ACTION("Controls", MIng_Controls, ""),
 	ADDSET_ACTION("Main Menu", MIng_MainMenu, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Return To Demo", MIng_Back, ""),
@@ -118,6 +122,7 @@ setting qtv_menu_entries[] = {
 	ADDSET_ACTION("Disconnect", MIng_Disconnect, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Options", MIng_Options, ""),
+	ADDSET_ACTION("Controls", MIng_Controls, ""),
 	ADDSET_ACTION("Main Menu", MIng_MainMenu, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Return To Game", MIng_Back, ""),
@@ -136,6 +141,7 @@ setting botmatch_menu_entries[] = {
 	ADDSET_ACTION("Disconnect", MIng_Disconnect, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Options", MIng_Options, ""),
+	ADDSET_ACTION("Controls", MIng_Controls, ""),
 	ADDSET_ACTION("Main Menu", MIng_MainMenu, ""),
 	ADDSET_BLANK(),
 	ADDSET_ACTION("Return To Game", MIng_Back, ""),

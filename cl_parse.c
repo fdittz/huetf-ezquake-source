@@ -1505,6 +1505,32 @@ void CL_ParseServerData (void)
 	Cbuf_AddAlias("huetfclient_gren2", "\"huetfclient_grenp2\"");
 	Cbuf_AddAlias("huetfclient_grenp2", "\"+gren2; alias huetfclient_gren2 huetfclient_grent2\"");
 	Cbuf_AddAlias("huetfclient_grent2", "\"-gren2; alias huetfclient_gren2 huetfclient_grenp2\"");
+	
+	Cbuf_AddAlias("+forwardid", "\"+forward;id\"");
+	Cbuf_AddAlias("-forwardid", "\"-forward\"");
+
+	Cbuf_AddAlias("+backid", "\"+back;id\"");
+	Cbuf_AddAlias("-backid", "\"-back\"");
+
+	Cbuf_AddAlias("+moveleftid", "\"+moveleft;id\"");
+	Cbuf_AddAlias("-moveleftid", "\"-moveleft\"");
+
+	Cbuf_AddAlias("+moverightid", "\"+moveright;id\"");
+	Cbuf_AddAlias("-moverightid", "\"-moveright\"");
+
+	Cbuf_AddAlias("+moveupid", "\"+moveup;id\"");
+	Cbuf_AddAlias("-moveupid", "\"-moveup\"");
+
+	Cbuf_AddAlias("+movedownid", "\"+movedown;id\"");
+	Cbuf_AddAlias("-movedownid", "\"-movedown\"");
+
+	Cbuf_AddAlias("+jumpid", "\"+jump;id\"");
+	Cbuf_AddAlias("-jumpid", "\"-jump\"");
+
+	Cbuf_AddAlias("+attackid", "\"+attack;id\"");
+	Cbuf_AddAlias("-attackid", "\"-attack\"");
+
+
 	}
 
 	if (strcasecmp(cls.gamedirfile, str)) 

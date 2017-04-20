@@ -420,15 +420,15 @@ setting settbinds_arr[] = {
 	ADDSET_BASIC_SECTION(),
 
 	ADDSET_SEPARATOR("Movement"),
-	ADDSET_BIND("Attack", "+attack"),
-	ADDSET_BIND("Jump/Swim up", "+jump"),
-	ADDSET_BIND("Move Forward", "+forward"),
-	ADDSET_BIND("Move Backward", "+back"),
-	ADDSET_BIND("Strafe Left", "+moveleft"),
-	ADDSET_BIND("Strafe Right", "+moveright"),
+	ADDSET_BIND("Attack", "+attackid"),
+	ADDSET_BIND("Jump/Swim up", "+jumpid"),
+	ADDSET_BIND("Move Forward", "+forwardid"),
+	ADDSET_BIND("Move Backward", "+backid"),
+	ADDSET_BIND("Strafe Left", "+moveleftid"),
+	ADDSET_BIND("Strafe Right", "+moverightid"),
 	ADDSET_ADVANCED_SECTION(),
-	ADDSET_BIND("Swim Up", "+moveup"),
-	ADDSET_BIND("Swim Down", "+movedown"),
+	ADDSET_BIND("Swim Up", "+moveupid"),
+	ADDSET_BIND("Swim Down", "+movedownid"),
 	ADDSET_BIND("Zoom In/Out", "+huetfclient_zoom"),
 	ADDSET_BASIC_SECTION(),
 
@@ -502,6 +502,11 @@ setting settbinds_arr[] = {
 
 
 setting scoutbinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Toggle Autoscanner", "autoscan"),
 	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
 	ADDSET_BIND("Grenade 1: Impact/Caltrop", "huetfclient_gren1"),
@@ -509,13 +514,23 @@ setting scoutbinds_arr[] = {
 };
 
 setting sniperbinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Zoom In/Out", "+huetfclient_zoom"),
 	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
 	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
 	ADDSET_BIND("Grenade 2: Flare", "huetfclient_gren2")
 };
 
-setting soldierbinds_arr[] = {	
+setting soldierbinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Rocket Jump (attack + jump)", "+huetfclient_rjump"),
 	ADDSET_BIND("Reload", "reload"),
 	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
@@ -524,6 +539,11 @@ setting soldierbinds_arr[] = {
 };
 
 setting demomanbinds_arr[] = {	
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Detonate Pipebombs", "detpipe"),
 	ADDSET_BIND("Reload", "reload"),
 	ADDSET_BIND("Set Detpack - 5 Seconds", "+det5"),
@@ -537,18 +557,33 @@ setting demomanbinds_arr[] = {
 };
 
 setting medicbinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
 	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
 	ADDSET_BIND("Grenade 2: Concussion", "huetfclient_gren2")
 };
 
 setting hwguybinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
 	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
 	ADDSET_BIND("Grenade 2: Mirv Grenade", "huetfclient_gren2")
 };
 
 setting pyrobinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Rocket Jump (attack + jump)", "+huetfclient_rjump"),
 	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
 	ADDSET_BIND("Grenade 1: Hand Grenade", "huetfclient_gren1"),
@@ -556,6 +591,11 @@ setting pyrobinds_arr[] = {
 };
 
 setting spybinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Disguise", "disguise"),
 	ADDSET_BIND("Feign Death", "feign"),
 	ADDSET_BIND("Anti-EMP Discard", "huetfclient_antiemp"),
@@ -564,6 +604,11 @@ setting spybinds_arr[] = {
 };
 
 setting engineerbinds_arr[] = {
+	ADDSET_SEPARATOR("WARNING"),
+	ADDSET_INFO("Keys assigned here will overwrite the"), 
+    ADDSET_INFO("keys defined on the General Controls"),
+    ADDSET_BLANK(),
+    ADDSET_BLANK(),
 	ADDSET_BIND("Build Menu", "build"),
 	ADDSET_BIND("Detonate Dispenser", "detdispenser"),
 	ADDSET_BIND("Detonate Sentry Gun", "detsentry"),

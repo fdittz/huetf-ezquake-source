@@ -690,6 +690,9 @@
   "menu_options": {
     "description": "This command will display the options menu."
   },
+  "menu_controls": {
+    "description": "This command will display the controls menu."
+  },
   "menu_quit": {
     "description": "This command will display the quit menu."
   },

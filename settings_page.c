@@ -88,6 +88,7 @@ static int STHeight(setting* s) {
 	}
 	switch (s->type) {
 		case stt_separator: return LINEHEIGHT*3;
+		case stt_info: return LINEHEIGHT;
 		case stt_advmark: case stt_basemark: return 0;
 		default: return LINEHEIGHT+PADDING;
 	}
@@ -149,6 +150,13 @@ static void Setting_DrawSeparator(int x, int y, int w, setting* set)
 {
 	char buf[32];
 	snprintf(buf, sizeof(buf), "\x1d %s \x1f", set->label);
+	UI_Print_Center(x, y+LINEHEIGHT+LINEHEIGHT/2, w, buf, true);
+}
+
+static void Setting_DrawInfo(int x, int y, int w, setting* set)
+{
+	char buf[80];
+	snprintf(buf, sizeof(buf), "%s", set->label);
 	UI_Print_Center(x, y+LINEHEIGHT+LINEHEIGHT/2, w, buf, true);
 }
 
@@ -295,6 +303,7 @@ static void Setting_Increase(setting* set) {
 
 			       // unhandled
 		case stt_separator:
+		case stt_info:
 		case stt_string:
 		case stt_bind:
 		case stt_skin:
@@ -331,6 +340,7 @@ static void Setting_Decrease(setting* set) {
 
 			       //unhandled
 		case stt_separator:
+		case stt_info:
 		case stt_action:
 		case stt_string:
 		case stt_bind:
@@ -354,6 +364,7 @@ static void Setting_Reset(setting* set)
 			// unhandled
 		case stt_bind:
 		case stt_separator:
+		case stt_info:
 		case stt_custom:
 		case stt_enum:
 		case stt_action:
@@ -467,7 +478,7 @@ static void CheckViewpoint(settings_page *tab)
 
 	tab->viewpoint = bound(0, tab->viewpoint, lwp);
 
-	if (tab->marked == 1 && tab->settings[0].type == stt_separator) tab->viewpoint = 0;
+	if (tab->marked == 1 && (tab->settings[0].type == stt_separator || tab->settings[0].type == stt_info)) tab->viewpoint = 0;
 
 	if (tab->viewpoint > tab->marked) {
 		// marked entry is above us
@@ -500,7 +511,7 @@ static void CheckCursor(settings_page *tab, qbool up)
 		up = true;
 	}
 	s = tab->settings + tab->marked;
-	if (s->type == stt_separator || (s->advanced && !menu_advanced.value) || s->type == stt_advmark || s->type == stt_basemark || s->type == stt_blank) {
+	if (s->type == stt_separator || s->type == stt_info  || (s->advanced && !menu_advanced.value) || s->type == stt_advmark || s->type == stt_basemark || s->type == stt_blank) {
 		tab->marked += up ? -1 : +1;
 		CheckCursor(tab, up);
 	}
@@ -918,7 +929,7 @@ void Settings_Draw_2(int x, int y, int w, int h, settings_page* tab, int tfClass
 		ch = STHeight(tab->settings + i);
 		if ((set->advanced && !menu_advanced.value) || set->type == stt_advmark || set->type == stt_basemark) continue;
 
-		if (active && set->type != stt_separator) {
+		if (active && (set->type != stt_separator || set->type != stt_info)) {
 			UI_DrawGrayBox(x, y, w, ch);
 		}
 		switch (set->type) {
@@ -927,6 +938,7 @@ void Settings_Draw_2(int x, int y, int w, int h, settings_page* tab, int tfClass
 			case stt_num: Setting_DrawNum(x, y, w, set, active); break;
 			case stt_intnum: Setting_DrawIntNum(x, y, w, set, active); break;
 			case stt_separator: Setting_DrawSeparator(x, y, w, set); break;
+			case stt_info: Setting_DrawInfo(x, y, w, set); break;
 			case stt_action: Setting_DrawAction(x, y, w, set, active); break;
 			case stt_named: Setting_DrawNamed(x, y, w, set, active); break;
 			case stt_enum: Setting_DrawEnum(x, y, w, set, active); break;
@@ -1010,7 +1022,7 @@ qbool Settings_Mouse_Event(settings_page *page, const mouse_state_t *ms)
 			{
 				Setting_Slider_Click(page, ms);
 			}
-			else if (page->settings[nmark].type != stt_separator)
+			else if (page->settings[nmark].type != stt_separator && page->settings[nmark].type != stt_info)
 			{
 				page->marked = nmark;
 				CheckCursor(page, ms->x < ms->x_old);
@@ -1044,7 +1056,7 @@ void Settings_Init(settings_page *page, setting *arr, size_t size)
 		if (arr[i].type == stt_basemark) advancedmode = false;
 		arr[i].advanced = advancedmode;
 
-		if (onlyseparators && arr[i].type != stt_separator) {
+		if (onlyseparators && arr[i].type != stt_separator && onlyseparators && arr[i].type != stt_info) {
 			onlyseparators = false;
 			page->marked = i;
 		}

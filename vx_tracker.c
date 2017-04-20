@@ -84,6 +84,57 @@ static struct {
 	char text[MAX_SCOREBOARDNAME+20];
 } ownfragtext;
 
+
+typedef struct {
+	int team;
+	char *skinname;
+	char *skinfile;
+	int bottomcolor;	
+} skin_file_t;
+
+skin_file_t skin_files[] =
+{
+	{1,"tf_scout","blue_sco",13},
+	{1,"tf_snipe","blue_sni",13},
+	{1,"tf_sold","blue_sol",13},
+	{1,"tf_demo","blue_dem",13},
+	{1,"tf_medic","blue_med",13},
+	{1,"tf_hwguy","blue_hwg",13},
+	{1,"tf_pyro","blue_pyr",13},
+	{1,"tf_spy","blue_spy",13},
+	{1,"tf_eng","blue_eng",13},
+	{2,"tf_scout","red_sco",4},
+	{2,"tf_snipe","red_sni",4},
+	{2,"tf_sold","red_sol",4},
+	{2,"tf_demo","red_dem",4},
+	{2,"tf_medic","red_med",4},
+	{2,"tf_hwguy","red_hwg",4},
+	{2,"tf_pyro","red_pyr",4},
+	{2,"tf_spy","red_spy",4},
+	{2,"tf_eng","red_eng",4},
+	{3,"tf_scout","yell_sco",12},
+	{3,"tf_snipe","yell_sni",12},
+	{3,"tf_sold","yell_sol",12},
+	{3,"tf_demo","yell_dem",12},
+	{3,"tf_medic","yell_med",12},
+	{3,"tf_hwguy","yell_hwg",12},
+	{3,"tf_pyro","yell_pyr",12},
+	{3,"tf_spy","yell_spy",12},
+	{3,"tf_eng","yell_eng",12},
+	{4,"tf_scout","gren_sco",11},
+	{4,"tf_snipe","gren_sni",11},
+	{4,"tf_sold","gren_sol",11},
+	{4,"tf_demo","gren_dem",11},
+	{4,"tf_medic","gren_med",11},
+	{4,"tf_hwguy","gren_hwg",11},
+	{4,"tf_pyro","gren_pyr",11},
+	{4,"tf_spy","gren_spy",11},
+	{4,"tf_eng","gren_eng",11}
+};			
+
+
+#define NUMSKINFILES (sizeof(skin_files) / sizeof(skin_files[0]))
+
 void InitTracker(void)
 {
 	Cvar_SetCurrentGroup(CVAR_GROUP_SCREEN);
@@ -270,6 +321,31 @@ static char *VX_Name(int player)
 	return string[idx % 2];
 }
 
+static char *VX_SkinName(int player)
+{
+	
+	int bottomcolor = cl.players[player].bottomcolor;	
+	char *team = cl.players[player].team;
+
+	if (cl.playernum != player) {
+		if (bottomcolor == cl.players[cl.playernum].bottomcolor) {
+			if (!(strcmp(cl.players[cl.playernum].team,team) == 0 )) {
+				return "";
+			}
+		}
+	}
+	char *userskin = Info_ValueForKey(cl.players[player].userinfo, "skin");
+
+	if (strstr(userskin, "tf_") != NULL) {
+		for (int i = 0 ; i < NUMSKINFILES; i++) {
+			if ((strcmp(skin_files[i].skinname, userskin) == 0) && (skin_files[i].bottomcolor == bottomcolor)) {
+				return skin_files[i].skinfile;
+			}
+		}
+	}
+	return userskin;
+}
+
 // Own Frags Text
 static void VX_OwnFragNew(const char *victim)
 {
@@ -380,7 +456,7 @@ void VX_TrackerDeath(int player, int weapon, int count)
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s%s&r %s&c%s%s&r", SuiColor(player), VX_Name(player), GetWeaponName(weapon), SuiColor(player), amf_tracker_string_died.string);
+			snprintf(outstring, sizeof(outstring), ">> &c%s%s&r  \\%s\\", SuiColor(player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -404,7 +480,7 @@ void VX_TrackerSuicide(int player, int weapon, int count)
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s%s&r %s&c%s%s&r", SuiColor(player), VX_Name(player), GetWeaponName(weapon), SuiColor(player), amf_tracker_string_suicides.string);
+			snprintf(outstring, sizeof(outstring), ">> &c%s%s&r  \\%s\\", SuiColor(player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -428,7 +504,7 @@ void VX_TrackerFragXvsY(int player, int killer, int weapon, int player_wcount, i
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s%s&r %s &c%s%s&r", XvsYColor(player, killer), VX_Name(killer), GetWeaponName(weapon), XvsYColor(killer, player), VX_Name(player));
+			snprintf(outstring, sizeof(outstring), "&c%s\\%s\\&r&c%s%s&r >> &c%s%s&r  \\%s\\", XvsYColor(player, killer),VX_SkinName(killer), XvsYColor(player, killer), VX_Name(killer), XvsYColor(killer, player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -440,6 +516,36 @@ void VX_TrackerFragXvsY(int player, int killer, int weapon, int player_wcount, i
 		snprintf(outstring, sizeof(outstring), "&r%s &c900killed you&r\n%s deaths: %i", cl.players[killer].name, GetWeaponName(weapon), player_wcount);
 	else if (cl.playernum == killer || (killer == Cam_TrackNum() && cl.spectator))
 		snprintf(outstring, sizeof(outstring), "&c900You killed &r%s\n%s kills: %i", cl.players[player].name, GetWeaponName(weapon), killer_wcount);
+
+	if (cl.playernum == killer || (killer == Cam_TrackNum() && cl.spectator))
+		VX_OwnFragNew(cl.players[player].name);
+
+	VX_TrackerAddText(outstring, tt_death);
+}
+
+void VX_TrackerFragXvsYObject(int killer, int player, int weapon)
+{
+	printf("KILLER ID: %d\n", killer);
+	printf("victim ID: %d\n", player);
+	
+	char outstring[MAX_TRACKER_MSG_LEN]="";
+
+	if (amf_tracker_frags.value == 2)
+	{
+		if (cl_useimagesinfraglog.integer)
+		{
+			snprintf(outstring, sizeof(outstring), "&c%s\\%s\\&r&c%s%s&r >> &c%s%s&r\\%s\\ \\%s\\", XvsYColor(player, killer),VX_SkinName(killer), XvsYColor(player, killer), VX_Name(killer), XvsYColor(killer, player), VX_Name(player), VX_SkinName(player),GetObjImageTeam(weapon));
+			Q_normalizetext(outstring);
+		}
+		else
+		{
+			snprintf(outstring, sizeof(outstring), "&r%s &c%s&r >> %s's %s", VX_Name(killer), XvsYColor(player, killer), VX_Name(player), GetWeaponName(weapon));
+		}
+	}
+	else if (cl.playernum == player || (player == Cam_TrackNum() && cl.spectator))
+		snprintf(outstring, sizeof(outstring), "&r%s &c900Destroyed  you&r\n%s", cl.players[killer].name, GetWeaponName(weapon));
+	else if (cl.playernum == killer || (killer == Cam_TrackNum() && cl.spectator))
+		snprintf(outstring, sizeof(outstring), "&c900You destroyed &r%s\n%s", cl.players[player].name, GetWeaponName(weapon));
 
 	if (cl.playernum == killer || (killer == Cam_TrackNum() && cl.spectator))
 		VX_OwnFragNew(cl.players[player].name);
@@ -477,7 +583,7 @@ void VX_TrackerTK_XvsY(int player, int killer, int weapon, int p_count, int p_ic
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s%s&r %s &c%s%s&r", TKColor(player), VX_Name(killer), GetWeaponName(weapon), TKColor(player), VX_Name(player));
+			snprintf(outstring, sizeof(outstring), "\\%s\\&c%s%s&r TKILLS &c%s%s&r  \\%s\\", VX_SkinName(player), TKColor(player), VX_Name(killer), TKColor(player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -584,7 +690,7 @@ killing_streak_t	tp_streak[] =
 	{ 15,  "unstoppable",        "unstoppable", "client/streakx3.wav"},
 	{ 10,  "on a rampage",       "rampage",     "client/streakx2.wav"},
 	{ 5,   "on a killing spree", "spree",       "client/streakx1.wav"},
-};						
+};	
 
 #define NUMSTREAK (sizeof(tp_streak) / sizeof(tp_streak[0]))
 
@@ -854,7 +960,7 @@ void VXSCR_DrawTrackerString (void)
 				x += 8 * scale;
 			}
 
-			y += 8 * scale;	// Next line.
+			y += 20 * scale;	// Next line.
 
 			start += l;
 

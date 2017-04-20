@@ -274,8 +274,6 @@
 #DEFINE OBITUARY	X_FRAGGED_BY_Y	DISCHARGE		" drains "   "'s batteries"
 #DEFINE OBITUARY	X_FRAGGED_BY_Y	DISCHARGE		" drains "   "' batteries"
 
-
-
 //
 // TeamFortress and MegaTeamFortress
 //
@@ -316,7 +314,7 @@
 #DEFINE WEAPON_CLASS    DRONE               "drone"
 #DEFINE WEAPON_CLASS    KNIFE               "knife"
 #DEFINE WEAPON_CLASS    PROXI               "proxi"
-#DEFINE WEAPON_CLASS    SENTRYGUN           "sent"
+#DEFINE WEAPON_CLASS    SENTRYGUN           "sent"  "sent"
 #DEFINE WEAPON_CLASS    SPANNER             "span"
 #DEFINE WEAPON_CLASS    SPIKE               "spike"
 #DEFINE WEAPON_CLASS    TESLACOIL           "tesla"
@@ -423,6 +421,7 @@
 #DEFINE OBITUARY	X_FRAGGED_BY_Y	SPANNER			" was spanner-murdered by "
 #DEFINE OBITUARY	X_FRAGGED_BY_Y	SPANNER			" was spanner-wacked by "
 #DEFINE OBITUARY	X_FRAGGED_BY_Y	TESLACOIL		"'s was obliterated by " "'s tesla coil"
+#DEFINE OBITUARY	X_OBJ_DEST_BY_Y	SENTRYGUN		"'s sentrygun was destroyed by "
 
 // General Kills
 #DEFINE OBITUARY	X_FRAGGED_BY_Y	AXE			" is split from crotch to sternum by " "'s axe swing"
