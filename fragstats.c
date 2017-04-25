@@ -860,8 +860,14 @@ char *GetWeaponName (int num)
 	if (wclasses[num].shortname && wclasses[num].shortname[0])
 		return wclasses[num].shortname;
 
-	if (wclasses[num].name && wclasses[num].name[0])
+	if (wclasses[num].name && wclasses[num].name[0]) {
+		if (cl_useimagesinfraglog.integer && (strcmp(wclasses[num].name, "Unknown") == 0))
+			return "\\unknown\\";
 		return wclasses[num].name;
+	}
+
+	if (cl_useimagesinfraglog.integer)
+		return "\\unknown\\";
 
 	return "Unknown";
 }
@@ -869,10 +875,15 @@ char *GetWeaponName (int num)
 char *GetObjImageTeam (int num)
 {
 	if (wclasses[num].shortname && wclasses[num].shortname[0]) {
-		printf("Returning here\n");
 		return wclasses[num].shortname;
 	}
 	if (wclasses[num].name && wclasses[num].name[0])
+		if (cl_useimagesinfraglog.integer && (strcmp(wclasses[num].name, "Unknown") == 0))
+			return "\\unknown\\";
 		return wclasses[num].name;
+
+	if (cl_useimagesinfraglog.integer)
+		return "\\unknown\\";
+
 	return "Unknown";
 }

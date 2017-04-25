@@ -284,27 +284,27 @@
 // "up2 destroys his sentrygun"
 
 // TeamFortress
-#DEFINE WEAPON_CLASS    ASSAULT_CANNON      "assault cannon"    "cann"
-#DEFINE WEAPON_CLASS    BIOWEAPON           "bioweapon"         "bio"
-#DEFINE WEAPON_CLASS    FLAME_THROWER       "flame thrower"     "flame"
+#DEFINE WEAPON_CLASS    ASSAULT_CANNON      "assault cannon"    "cann"   "\cann\"
+#DEFINE WEAPON_CLASS    BIOWEAPON           "bioweapon"         "bio"    "\bio\"
+#DEFINE WEAPON_CLASS    FLAME_THROWER       "flame thrower"     "flame"  "\flame\"
 #DEFINE WEAPON_CLASS    GRAPPLE             "grapple"           "grap"
-#DEFINE WEAPON_CLASS    INCENDIARY_ROCKET   "incendiary rocket" "incnd"
-#DEFINE WEAPON_CLASS    PIPEBOMB            "pipebomb"          "pipe"
-#DEFINE WEAPON_CLASS    SNIPER_RIFLE        "sniper rifle"      "snipe"
-#DEFINE WEAPON_CLASS    SNIPER_SPRAY        "sniper spray"      "spray"
-#DEFINE WEAPON_CLASS    TRANQUILIZER        "tranquilizer"      "tranq"
+#DEFINE WEAPON_CLASS    INCENDIARY_ROCKET   "incendiary rocket" "incnd"  "\incnd\"
+#DEFINE WEAPON_CLASS    PIPEBOMB            "pipebomb"          "pipe"   "\pipe\"
+#DEFINE WEAPON_CLASS    SNIPER_RIFLE        "sniper rifle"      "snipe"  "\snipe\"
+#DEFINE WEAPON_CLASS    SNIPER_SPRAY        "sniper spray"      "spray"  "\spray\"
+#DEFINE WEAPON_CLASS    TRANQUILIZER        "tranquilizer"      "tranq"  "\tranq\"
 
 
-#DEFINE WEAPON_CLASS    CALTROP             "caltrop"           "calt"
-#DEFINE WEAPON_CLASS    EMPGREN             "emp grenade"       "emp"
-#DEFINE WEAPON_CLASS    FLASHGREN           "flash grenade"     "flashg"
-#DEFINE WEAPON_CLASS    GASGREN             "gas grenade"       "gas"
-#DEFINE WEAPON_CLASS    HANDGREN            "hand grenade"      "hgren"
-#DEFINE WEAPON_CLASS    MIRVGREN            "mirv grenade"      "mirv"
-#DEFINE WEAPON_CLASS    NAILGREN            "nail grenade"      "nailg"
+#DEFINE WEAPON_CLASS    CALTROP             "caltrop"           "calt"   "\calt\"
+#DEFINE WEAPON_CLASS    EMPGREN             "emp grenade"       "emp"    "\emp\"
+#DEFINE WEAPON_CLASS    FLASHGREN           "flash grenade"     "flashg" "\flashg\"
+#DEFINE WEAPON_CLASS    GASGREN             "gas grenade"       "gas"    "\gas\"
+#DEFINE WEAPON_CLASS    HANDGREN            "hand grenade"      "hgren"  "\hgren\"
+#DEFINE WEAPON_CLASS    MIRVGREN            "mirv grenade"      "mirv"   "\mirv\"
+#DEFINE WEAPON_CLASS    NAILGREN            "nail grenade"      "nailg"  "\nailg\"
 
-#DEFINE WEAPON_CLASS    DETPACK             "detpack"           "dpack"
-#DEFINE WEAPON_CLASS    DISPENSER           "dispenser"         "disp"
+#DEFINE WEAPON_CLASS    DETPACK             "detpack"           "dpack"  "\dpack\"
+#DEFINE WEAPON_CLASS    DISPENSER           "dispenser"         "disp"   "\disp\"
 
 
 // Mega TeamFortress
@@ -314,7 +314,7 @@
 #DEFINE WEAPON_CLASS    DRONE               "drone"
 #DEFINE WEAPON_CLASS    KNIFE               "knife"
 #DEFINE WEAPON_CLASS    PROXI               "proxi"
-#DEFINE WEAPON_CLASS    SENTRYGUN           "sent"  "sent"
+#DEFINE WEAPON_CLASS    SENTRYGUN           "sent"  "sent" "\sent\"
 #DEFINE WEAPON_CLASS    SPANNER             "span"
 #DEFINE WEAPON_CLASS    SPIKE               "spike"
 #DEFINE WEAPON_CLASS    TESLACOIL           "tesla"

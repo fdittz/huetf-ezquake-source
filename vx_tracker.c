@@ -456,7 +456,7 @@ void VX_TrackerDeath(int player, int weapon, int count)
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), ">> &c%s%s&r  \\%s\\", SuiColor(player), VX_Name(player), VX_SkinName(player));
+			snprintf(outstring, sizeof(outstring), "%s &c%s%s&r \\%s\\", GetWeaponName(weapon), SuiColor(player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -480,7 +480,7 @@ void VX_TrackerSuicide(int player, int weapon, int count)
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), ">> &c%s%s&r  \\%s\\", SuiColor(player), VX_Name(player), VX_SkinName(player));
+			snprintf(outstring, sizeof(outstring), "%s &c%s%s&r \\%s\\", GetWeaponName(weapon), SuiColor(player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -504,7 +504,7 @@ void VX_TrackerFragXvsY(int player, int killer, int weapon, int player_wcount, i
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s\\%s\\&r&c%s%s&r >> &c%s%s&r  \\%s\\", XvsYColor(player, killer),VX_SkinName(killer), XvsYColor(player, killer), VX_Name(killer), XvsYColor(killer, player), VX_Name(player), VX_SkinName(player));
+			snprintf(outstring, sizeof(outstring), "&c%s\\%s\\ &r&c%s%s&r %s &c%s%s&r \\%s\\", XvsYColor(player, killer),VX_SkinName(killer), XvsYColor(player, killer), VX_Name(killer), GetWeaponName(weapon), XvsYColor(killer, player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -525,16 +525,13 @@ void VX_TrackerFragXvsY(int player, int killer, int weapon, int player_wcount, i
 
 void VX_TrackerFragXvsYObject(int killer, int player, int weapon)
 {
-	printf("KILLER ID: %d\n", killer);
-	printf("victim ID: %d\n", player);
-	
 	char outstring[MAX_TRACKER_MSG_LEN]="";
 
 	if (amf_tracker_frags.value == 2)
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s\\%s\\&r&c%s%s&r >> &c%s%s&r\\%s\\ \\%s\\", XvsYColor(player, killer),VX_SkinName(killer), XvsYColor(player, killer), VX_Name(killer), XvsYColor(killer, player), VX_Name(player), VX_SkinName(player),GetObjImageTeam(weapon));
+			snprintf(outstring, sizeof(outstring), "\\%s\\ &c%s &r&c%s%s&r >> &c%s%s&r \\%s\\  \\%s\\", VX_SkinName(killer), XvsYColor(player, killer), XvsYColor(player, killer), VX_Name(killer), XvsYColor(killer, player), VX_Name(player), VX_SkinName(player),GetObjImageTeam(weapon));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -583,7 +580,7 @@ void VX_TrackerTK_XvsY(int player, int killer, int weapon, int p_count, int p_ic
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "\\%s\\&c%s%s&r TKILLS &c%s%s&r  \\%s\\", VX_SkinName(player), TKColor(player), VX_Name(killer), TKColor(player), VX_Name(player), VX_SkinName(player));
+			snprintf(outstring, sizeof(outstring), "\\%s\\ &c%s%s&r \\tkills\\ &c%s%s&r \\%s\\", VX_SkinName(player), TKColor(player), VX_Name(killer), TKColor(player), VX_Name(player), VX_SkinName(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -611,7 +608,7 @@ void VX_TrackerOddTeamkill(int player, int weapon, int count)
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s%s&r %s &c%s%s&r", TKColor(player), VX_Name(player), GetWeaponName(weapon), TKColor(player), amf_tracker_string_teammate.string);
+			snprintf(outstring, sizeof(outstring), "\\%s\\ &c%s%s&r %s &c%s%s&r", VX_SkinName(player), TKColor(player), VX_Name(player), GetWeaponName(weapon), TKColor(player), amf_tracker_string_teammate.string);
 			Q_normalizetext(outstring);
 		}
 		else
@@ -635,7 +632,7 @@ void VX_TrackerOddTeamkilled(int player, int weapon)
 	{
 		if (cl_useimagesinfraglog.integer)
 		{
-			snprintf(outstring, sizeof(outstring), "&c%s%s&r %s &c%s%s&r", TKColor(player), amf_tracker_string_teammate.string, GetWeaponName(weapon), TKColor(player), VX_Name(player));
+			snprintf(outstring, sizeof(outstring), "\\%s\\ &c%s%s&r %s &c%s%s&r", VX_SkinName(player), TKColor(player), amf_tracker_string_teammate.string, GetWeaponName(weapon), TKColor(player), VX_Name(player));
 			Q_normalizetext(outstring);
 		}
 		else
@@ -918,14 +915,14 @@ void VXSCR_DrawTrackerString (void)
 							if ((pic = Draw_CachePicSafe(fullpath, false, true)))
 							{
 								Draw_FitPic(
-										(float)x - 0.5 * 8 * 2 * (im_scale - 1) * scale, 
+										(float)x - 0.5 * 8 * (im_scale - 1) * scale, 
 										(float)y - 0.5 * 8 * (im_scale - 1) * scale, 
-										im_scale * 8 * 2 * scale,
+										im_scale * 8 * scale,
 										im_scale * 8 * scale, pic);
 							}
 						}
 
-						x += 8 * 2 * scale;
+						x += 8 * scale;
 					}
 
 					if (start[j] == '\\')
