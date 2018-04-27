@@ -88,6 +88,7 @@ f_trigger_t f_triggers[] = {
 	{"f_respawn", true, true},
 	{"f_death", true, true},
 	{"f_flagdeath", true, true},
+	{"f_resetgrens", true, true},
 
 	{"f_conc", true, true},
 	{"f_flash", true, true},

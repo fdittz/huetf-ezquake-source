@@ -255,6 +255,17 @@ int			scr_erase_center;
 // Called for important messages that should stay in the center of the screen for a few moments
 void SCR_CenterPrint (char *str)
 {
+	const char *sbarindexchar = "Ǳ";
+	char *c = str;
+	while (*c)
+   {
+       if (strchr(sbarindexchar, *c))
+       {
+          printf("%c is in \"%s\"\n", *c, str);
+       }
+
+       c++;
+   }
 	strlcpy (scr_centerstring, str, sizeof(scr_centerstring));
 	scr_centertime_off = scr_centertime.value;
 	scr_centertime_start = cl.time;

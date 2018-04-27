@@ -3401,6 +3401,7 @@ void TP_StatChanged (int stat, int value)
 				vars.last_numfriendlies = vars.numfriendlies;
 
 				if (CheckTrigger()) {
+					TP_ExecTrigger ("f_resetgrens");
 					if (cl.teamfortress && (cl.stats[STAT_ITEMS] & (IT_KEY1|IT_KEY2)))
 						TP_ExecTrigger ("f_flagdeath");
 					else if (effects & (EF_FLAG1|EF_FLAG2))

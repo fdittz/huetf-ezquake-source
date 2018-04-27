@@ -1484,9 +1484,12 @@ void CL_ParseServerData (void)
 	Cbuf_AddText("setinfo ec on\n");    
 	Cbuf_AddAlias("play_count","play gren.wav");
     Cbuf_AddText("msg_trigger play_count \"renade primed\"\n");
+    Cbuf_AddText("tp_forceTriggers 1\n");
+    Cbuf_AddText("tp_took \"flag\"\n");
 
 
-	Cbuf_AddAlias("huetfclient_antiemp", "\"discard; drop_toss; drop_toss; drop_toss; drop_ditch; drop_ditch; drop_ditch; drop_ditch\"");
+
+	Cbuf_AddAlias("huetfclient_antiemp", "\"discard; huetfclient_drop_toss; huetfclient_drop_toss; huetfclient_drop_toss; huetfclient_drop_ditch; huetfclient_drop_ditch; huetfclient_drop_ditch; huetfclient_drop_ditch\"");
 	Cbuf_AddAlias("huetfclient_drop_ditch","\"wait; dropammo; wait; impulse 1; wait\"");
 	Cbuf_AddAlias("huetfclient_drop_toss","\"wait; dropammo; wait; impulse 3; wait\"");
 	Cbuf_AddAlias("huetfclient_drop_cell","\"wait; dropammo; wait; impulse 4; wait\"");
@@ -1499,12 +1502,13 @@ void CL_ParseServerData (void)
 	Cbuf_AddAlias("huetfclient_pipejump","\"weapon 7;+jump;detpipe;wait;-jump;wait\"");
 
 	Cbuf_AddAlias("huetfclient_gren1", "\"huetfclient_grenp1\"");
-	Cbuf_AddAlias("huetfclient_grenp1", "\"+gren1; alias huetfclient_gren1 huetfclient_grent1\"");
-	Cbuf_AddAlias("huetfclient_grent1", "\"-gren1; alias huetfclient_gren1 huetfclient_grenp1\"");
+	Cbuf_AddAlias("huetfclient_grenp1", "\"primeone; alias huetfclient_gren1 huetfclient_grent1\"");
+	Cbuf_AddAlias("huetfclient_grent1", "\"throwgren; alias huetfclient_gren1 huetfclient_grenp1\"");	
 
 	Cbuf_AddAlias("huetfclient_gren2", "\"huetfclient_grenp2\"");
-	Cbuf_AddAlias("huetfclient_grenp2", "\"+gren2; alias huetfclient_gren2 huetfclient_grent2\"");
-	Cbuf_AddAlias("huetfclient_grent2", "\"-gren2; alias huetfclient_gren2 huetfclient_grenp2\"");
+	Cbuf_AddAlias("huetfclient_grenp2", "\"primetwo; alias huetfclient_gren2 huetfclient_grent2\"");
+	Cbuf_AddAlias("huetfclient_grent2", "\"throwgren; alias huetfclient_gren2 huetfclient_grenp2\"");
+	Cbuf_AddAlias("f_resetgrens","\"alias huetfclient_gren1 huetfclient_grenp1;alias huetfclient_gren2 huetfclient_grenp2;\"");
 	
 	Cbuf_AddAlias("+forwardid", "\"+forward;id\"");
 	Cbuf_AddAlias("-forwardid", "\"-forward\"");
